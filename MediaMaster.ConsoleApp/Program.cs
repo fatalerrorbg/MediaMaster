@@ -32,7 +32,23 @@ namespace MediaMaster.ConsoleApp
 
             string desktop = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "DownloadedFiles");
             Directory.CreateDirectory(desktop);
-            downloader.DownloadAndConvert(vboxFiles, desktop, SupportedConversionFormats.Mp3, false);
+            var results = downloader.DownloadAndConvert(vboxFiles, desktop, SupportedConversionFormats.Mp3, false);
+
+            var notDownloaded = new List<DownloadResult>();
+            var notConverted = new List<ConvertResult>();
+
+            foreach (var item in results)
+            {
+                if (!item.DownloadResult.IsDownloaded)
+                {
+                    notDownloaded.Add(item.DownloadResult);
+                }
+
+                if (!item.ConversionResult.IsConverted)
+                {
+                    notConverted.Add(item.ConversionResult);
+                }
+            }
 
         }
 

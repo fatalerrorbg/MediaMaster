@@ -8,12 +8,42 @@ using System.Net;
 using Ionic.Zip;
 using System.Diagnostics;
 using MediaMaster.Converter;
+using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace MediaMaster
 {
     public class MediaFileDownloader
     {
         protected static readonly object SyncRoot = new object();
+
+        private static ReadOnlyCollection<string> userAgents = new ReadOnlyCollection<string>(new List<string>
+                    {
+                        "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36",
+                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1664.3 Safari/537.36",
+                        "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.16 Safari/537.36",
+                        "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.17 Safari/537.36",
+                        "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0",
+                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:25.0) Gecko/20100101 Firefox/25.0",
+                        "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:21.0) Gecko/20130331 Firefox/21.0",
+                        "Mozilla/5.0 (compatible; MSIE 10.6; Windows NT 6.1; Trident/5.0; InfoPath.2; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 2.0.50727) 3gpp-gba UNTRUSTED/1.0",
+                        "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)",
+                        "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)"
+                    });
+        private static Random rnd = new Random();
+
+        public static ReadOnlyCollection<string> UserAgents
+        {
+            get
+            {
+                return userAgents;
+            }
+        }
+
+        public static string GetRandomUserAgent()
+        {
+            return UserAgents[rnd.Next(0, UserAgents.Count)];
+        }
 
         public IEnumerable<CompositeResult<DownloadResult, ConvertResult>> DownloadAndConvert
             (IEnumerable<MediaFile> files, string tempFolderName, string convertTo = "", bool deleteCreatedFolder = true)
@@ -67,6 +97,11 @@ namespace MediaMaster
 
                     tasks.Add(newTask);
                 }
+                else
+                {
+                    tasks.Add(new Task<CompositeResult<DownloadResult, ConvertResult>>(() =>
+                        new CompositeResult<DownloadResult, ConvertResult>(file, new DownloadResult(file) { IsDownloaded = false }, new ConvertResult(file) { IsConverted = false })));
+                }
             }
 
             return tasks.ToArray();
@@ -97,6 +132,9 @@ namespace MediaMaster
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(metadata.DownloadLink);
             request.Method = "GET";
+            request.UserAgent = MediaFileDownloader.GetRandomUserAgent();
+            request.KeepAlive = true;
+            request.Timeout = Timeout.Infinite;
             try
             {
                 bool fileExists = File.Exists(outputPath);
