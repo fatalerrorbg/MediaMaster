@@ -8,7 +8,7 @@ using HtmlAgilityPack;
 
 namespace MediaMaster
 {
-    public class VboxFile : WebFile<VboxFileMetadata>
+    public class VboxFile : MediaFile<VboxFileMetadata>
     {
         public const string InfoUrl = "http://www.vbox7.com/etc/ext.do?key={0}&antiCacheStamp=5316311";
         public const string DownloadUrlKey = "flv_addr";
@@ -43,7 +43,7 @@ namespace MediaMaster
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(response);
 
-                fileName = doc.DocumentNode.Descendants("h3").First().Descendants().First().InnerText.Replace(" / VBOX7", "");
+                fileName = doc.DocumentNode.Descendants("h3").First(x => x.Attributes["class"] != null && x.Attributes["class"].Value == "r").Descendants().First().InnerText.Replace(" / VBOX7", "");
 	        }
 
             using (WebClient wc = new WebClient())

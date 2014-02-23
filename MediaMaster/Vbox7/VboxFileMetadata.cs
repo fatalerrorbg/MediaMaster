@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MediaMaster
 {
-    public class VboxFileMetadata : WebFileMetadata
+    public class VboxFileMetadata : MediaFileMetadata
     {
         public string VideoId { get; private set; }
 

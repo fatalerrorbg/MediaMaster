@@ -13,9 +13,9 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void DownloadFileTest()
         {
-            WebFileDownloader downloader = new WebFileDownloader();
-            WebFile file = WebFile.CreateNew(VboxDownloadVideo);
-            string downloadedFile = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).FullName;
+            MediaFileDownloader downloader = new MediaFileDownloader();
+            MediaFile file = MediaFile.CreateNew(VboxDownloadVideo);
+            string downloadedFile = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).DownloadPath;
 
             Assert.AreEqual(VboxDownloadedVideoPath, downloadedFile);
         }
@@ -23,11 +23,11 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void DownloadFileStartingEventTest()
         {
-            WebFileDownloader downloader = new WebFileDownloader();
+            MediaFileDownloader downloader = new MediaFileDownloader();
             bool fired = false;
-            WebFile file = WebFile.CreateNew(VboxDownloadVideo);
-            downloader.WebFileDownloadStarting += (s, e) => fired = true;
-            string downloadedFile = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).FullName;
+            MediaFile file = MediaFile.CreateNew(VboxDownloadVideo);
+            downloader.MediaFileDownloadStarting += (s, e) => fired = true;
+            string downloadedFile = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).DownloadPath;
 
             Assert.AreEqual(fired, true);
         }
@@ -35,21 +35,21 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void DownloadFileProgressEventTest()
         {
-            WebFileDownloader downloader = new WebFileDownloader();
+            MediaFileDownloader downloader = new MediaFileDownloader();
 
             bool hasDownloadSize = false;
             bool hasMaxSize = false;
             bool hasProgress = false;
 
-            WebFile file = WebFile.CreateNew(VboxDownloadVideo);
-            downloader.WebFileDownloadProgress += (s, e) =>
+            MediaFile file = MediaFile.CreateNew(VboxDownloadVideo);
+            downloader.MediaFileDownloadProgress += (s, e) =>
                 {
                     hasDownloadSize = e.DownloadedSize > 0;
                     hasMaxSize = e.FileSize > 0;
                     hasProgress = e.PercentageComplete > 0;
                 };
 
-            string downloadedFile = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).FullName;
+            string downloadedFile = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).DownloadPath;
 
             Assert.AreEqual(true, hasDownloadSize && hasMaxSize && hasProgress);
         }
@@ -57,17 +57,17 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void DownloadFileCompletedEventTest()
         {
-            WebFileDownloader downloader = new WebFileDownloader();
+            MediaFileDownloader downloader = new MediaFileDownloader();
 
             bool downloaded = false;
 
-            WebFile file = WebFile.CreateNew(VboxDownloadVideo);
-            downloader.WebFileDownloadFinished += (s, e) =>
+            MediaFile file = MediaFile.CreateNew(VboxDownloadVideo);
+            downloader.MediaFileDownloadFinished += (s, e) =>
             {
                 downloaded = true;
             };
 
-            string downloadedFile = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).FullName;
+            string downloadedFile = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).DownloadPath;
 
             Assert.AreEqual(true, downloaded);
         }
@@ -75,12 +75,12 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void ConversionStartingEventTest()
         {
-            WebFileDownloader downloader = new WebFileDownloader();
+            MediaFileDownloader downloader = new MediaFileDownloader();
 
-            WebFile file = WebFile.CreateNew(VboxDownloadVideo);
-            string downloadedPath = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).FullName;
+            MediaFile file = MediaFile.CreateNew(VboxDownloadVideo);
+            string downloadedPath = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).DownloadPath;
             bool converting = false;
-            downloader.WebFileConversionStarting += delegate { converting = true; };
+            downloader.MediaFileConversionStarting += delegate { converting = true; };
             downloader.ConvertSingleFile(file, downloadedPath, Environment.GetFolderPath(Environment.SpecialFolder.Desktop), SupportedConversionFormats.Mp3);
 
             Assert.AreEqual(true, converting);
@@ -89,12 +89,12 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void ConversionEndedEventTest()
         {
-            WebFileDownloader downloader = new WebFileDownloader();
+            MediaFileDownloader downloader = new MediaFileDownloader();
 
-            WebFile file = WebFile.CreateNew(VboxDownloadVideo);
-            string downloadedPath = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).FullName;
+            MediaFile file = MediaFile.CreateNew(VboxDownloadVideo);
+            string downloadedPath = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).DownloadPath;
             bool converting = false;
-            downloader.WebFileConvertionCompelete += delegate { converting = true; };
+            downloader.MediaFileConvertionCompelete += delegate { converting = true; };
             downloader.ConvertSingleFile(file, downloadedPath, Environment.GetFolderPath(Environment.SpecialFolder.Desktop), SupportedConversionFormats.Mp3);
 
             Assert.AreEqual(true, converting);

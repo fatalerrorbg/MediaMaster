@@ -8,32 +8,32 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MediaMaster.Tests
 {
     [TestClass]
-    public class WebFileTests
+    public class MediaFileTests
     {
         public const string VboxTestUrl = "http://www.vbox7.com/play:a40c203d8b";
 
         [TestMethod]
         public void PropertyUrlIsSetCorrectlyTest()
         {
-            WebFile webFile = new VboxFile(VboxTestUrl);
+            MediaFile MediaFile = new VboxFile(VboxTestUrl);
 
-            Assert.AreEqual(webFile.Url, VboxTestUrl);
+            Assert.AreEqual(MediaFile.Url, VboxTestUrl);
         }
 
         [TestMethod]
         public void PropertyFileOriginIsSetCorrectlyTest()
         {
-            WebFile webFile = new VboxFile(VboxTestUrl);
+            MediaFile MediaFile = new VboxFile(VboxTestUrl);
 
-            Assert.AreEqual(webFile.FileOrigin, FileOrigin.Vbox7);
+            Assert.AreEqual(MediaFile.FileOrigin, FileOrigin.Vbox7);
         }
 
         [TestMethod]
         public void GetsCorrectDownloaderTestVbox()
         {
-            WebFile webFile = WebFile.CreateNew(VboxTestUrl);
+            MediaFile MediaFile = MediaFile.CreateNew(VboxTestUrl);
 
-            bool isVboxDownloader = webFile is VboxFile;
+            bool isVboxDownloader = MediaFile is VboxFile;
 
             Assert.AreEqual(true, isVboxDownloader);
         }
@@ -41,8 +41,8 @@ namespace MediaMaster.Tests
         [TestMethod]
         public void GetsCorrectMetadataTest()
         {
-            WebFile webFile = WebFile.CreateNew(VboxTestUrl);
-            WebFileMetadata metadata = webFile.GetMetadata();
+            MediaFile MediaFile = MediaFile.CreateNew(VboxTestUrl);
+            MediaFileMetadata metadata = MediaFile.GetMetadata();
 
             bool isVboxMetadata = metadata is VboxFileMetadata;
 

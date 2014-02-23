@@ -13,7 +13,7 @@ namespace MediaMaster.Tests
         [TestMethod]
         public void GetsCorrectVideoIdTest()
         {
-            VboxFile file = WebFile.CreateNew(WebFileTests.VboxTestUrl) as VboxFile;
+            VboxFile file = MediaFile.CreateNew(MediaFileTests.VboxTestUrl) as VboxFile;
             string id = "a40c203d8b";
 
             Assert.AreEqual(file.Metadata.VideoId, id);
@@ -22,7 +22,7 @@ namespace MediaMaster.Tests
         [TestMethod]
         public void GetsCorrectVideoDownloadLinkTest()
         {
-            WebFile downloader = WebFile.CreateNew(WebFileTests.VboxTestUrl);
+            MediaFile downloader = MediaFile.CreateNew(MediaFileTests.VboxTestUrl);
 
             string downloadLink = downloader.GetMetadata().DownloadLink;
 
@@ -32,7 +32,7 @@ namespace MediaMaster.Tests
         [TestMethod]
         public void GetsCorrectThumbnailLinkTest()
         {
-            WebFile downloader = WebFile.CreateNew(WebFileTests.VboxTestUrl);
+            MediaFile downloader = MediaFile.CreateNew(MediaFileTests.VboxTestUrl);
 
             string thumbnailLink = downloader.GetMetadata().ThumbnailLink;
 
@@ -44,7 +44,7 @@ namespace MediaMaster.Tests
         {
             string fileName = "Как се наказва изневяра .. Смях";
 
-            VboxFile file = WebFile.CreateNew(WebFileTests.VboxTestUrl) as VboxFile;
+            VboxFile file = MediaFile.CreateNew(MediaFileTests.VboxTestUrl) as VboxFile;
 
             string actualName = file.Metadata.FileName;
 

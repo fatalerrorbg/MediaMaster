@@ -34,12 +34,12 @@ namespace MediaMaster.Tests.ConverterTests
         [TestMethod]
         public void IsConvertingToMp3()
         {
-            WebFileDownloader downloader = new WebFileDownloader();
-            WebFile webFile = WebFile.CreateNew(VboxDownloadConvertTests.VboxDownloadVideo);
-            string existingPath = Path.Combine(Directory.GetCurrentDirectory(), webFile.GetMetadata().FileName + webFile.GetMetadata().FileExtension);
+            MediaFileDownloader downloader = new MediaFileDownloader();
+            MediaFile MediaFile = MediaFile.CreateNew(VboxDownloadConvertTests.VboxDownloadVideo);
+            string existingPath = Path.Combine(Directory.GetCurrentDirectory(), MediaFile.GetMetadata().FileName + MediaFile.GetMetadata().FileExtension);
             if (!File.Exists(existingPath))
             {
-                downloader.Download(webFile, Directory.GetCurrentDirectory());
+                downloader.Download(MediaFile, Directory.GetCurrentDirectory());
             }
 
             MediaConverter converter = new MediaConverter();

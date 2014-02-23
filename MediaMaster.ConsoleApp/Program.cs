@@ -19,16 +19,16 @@ namespace MediaMaster.ConsoleApp
                 files.Add(line);
             }
 
-            WebFile[] vboxFiles = files.Where(x => WebFile.ParseFileOrigin(x) == FileOrigin.Vbox7).Select(x => new VboxFile(x)).ToArray();
+            MediaFile[] vboxFiles = files.Where(x => MediaFile.ParseFileOrigin(x) == FileOrigin.Vbox7).Select(x => new VboxFile(x)).ToArray();
 
-            WebFileDownloader downloader = new WebFileDownloader();
+            MediaFileDownloader downloader = new MediaFileDownloader();
 
-            downloader.WebFileDownloadStarting += downloader_WebFileDownloadStarting;
-            downloader.WebFileDownloadProgress += downloader_WebFileDownloadProgress;
-            downloader.WebFileDownloadFinished += downloader_WebFileDownloadFinished;
+            downloader.MediaFileDownloadStarting += downloader_MediaFileDownloadStarting;
+            downloader.MediaFileDownloadProgress += downloader_MediaFileDownloadProgress;
+            downloader.MediaFileDownloadFinished += downloader_MediaFileDownloadFinished;
 
-            downloader.WebFileConversionStarting += downloader_WebFileConversionStarting;
-            downloader.WebFileConvertionCompelete += downloader_WebFileConvertionCompelete;
+            downloader.MediaFileConversionStarting += downloader_MediaFileConversionStarting;
+            downloader.MediaFileConvertionCompelete += downloader_MediaFileConvertionCompelete;
 
             string desktop = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "DownloadedFiles");
             Directory.CreateDirectory(desktop);
@@ -36,29 +36,29 @@ namespace MediaMaster.ConsoleApp
 
         }
 
-        static void downloader_WebFileConvertionCompelete(object sender, WebFileConversionEventArgs e)
+        static void downloader_MediaFileConvertionCompelete(object sender, MediaFileConversionEventArgs e)
         {
-            Console.WriteLine("Converted file {0}", e.WebFile.GetMetadata().FileName);
+            Console.WriteLine("Converted file {0}", e.MediaFile.GetMetadata().FileName);
         }
 
-        static void downloader_WebFileConversionStarting(object sender, WebFileConversionEventArgs e)
+        static void downloader_MediaFileConversionStarting(object sender, MediaFileConversionEventArgs e)
         {
-            Console.WriteLine("Converting file {0}", e.WebFile.GetMetadata().FileName);
+            Console.WriteLine("Converting file {0}", e.MediaFile.GetMetadata().FileName);
         }
 
-        static void downloader_WebFileDownloadFinished(object sender, WebFileDownloadFinishedEvenArgs e)
+        static void downloader_MediaFileDownloadFinished(object sender, MediaFileDownloadFinishedEvenArgs e)
         {
-            Console.WriteLine("Finished Downloading file {0}", e.WebFile.GetMetadata().FileName);
+            Console.WriteLine("Finished Downloading file {0}", e.MediaFile.GetMetadata().FileName);
         }
 
-        static void downloader_WebFileDownloadProgress(object sender, WebFileDownloadProgressEventArgs e)
+        static void downloader_MediaFileDownloadProgress(object sender, MediaFileDownloadProgressEventArgs e)
         {
-            //Console.WriteLine("Download Progress of file {0} - {1}", e.WebFile.GetMetadata().FileName, e.PercentageComplete);
+            //Console.WriteLine("Download Progress of file {0} - {1}", e.MediaFile.GetMetadata().FileName, e.PercentageComplete);
         }
 
-        static void downloader_WebFileDownloadStarting(object sender, WebFileDownloadStartingEventArgs e)
+        static void downloader_MediaFileDownloadStarting(object sender, MediaFileDownloadStartingEventArgs e)
         {
-            Console.WriteLine("Downloading {0}", e.WebFile.GetMetadata().FileName);
+            Console.WriteLine("Downloading {0}", e.MediaFile.GetMetadata().FileName);
         }
     }
 }
