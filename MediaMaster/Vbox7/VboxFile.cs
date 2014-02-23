@@ -5,8 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using HtmlAgilityPack;
-using MediaToolkit.Model;
-using MediaToolkit.Options;
 
 namespace MediaMaster
 {

@@ -50,9 +50,7 @@
     <Compile Include="Converter\MediaConverter.cs" />
     <Compile Include="Converter\MediaConverterMetadata.cs" />
     <Compile Include="Downloader\FileExtensions.cs" />
-    <Compile Include="Downloader\WebFileConversionCompletedEventArgs.cs" />
     <Compile Include="Downloader\WebFileConversionStartingEventArgs.cs" />
-    <Compile Include="Downloader\WebFileConvertionProgressEventArgs.cs" />
     <Compile Include="Downloader\WebFileDownloader.cs" />
     <Compile Include="Downloader\WebFileDownloaderCancelableEventArgs.cs" />
     <Compile Include="Downloader\WebFileDownloaderEventArgs.cs" />
