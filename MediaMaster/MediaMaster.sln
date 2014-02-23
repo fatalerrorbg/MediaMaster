@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaMaster", "MediaMaster.csproj", "{3CD93B89-92D5-488C-93AE-C6C748E72C39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaMaster.Tests", "..\MediaMaster.Tests\MediaMaster.Tests.csproj", "{350A996C-764B-409B-97C0-027DE95C591D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaMaster.ConsoleApp", "..\MediaMaster.ConsoleApp\MediaMaster.ConsoleApp.csproj", "{C2ABCEB4-34F7-472F-BF41-5921A8C64F92}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3CD93B89-92D5-488C-93AE-C6C748E72C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CD93B89-92D5-488C-93AE-C6C748E72C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CD93B89-92D5-488C-93AE-C6C748E72C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CD93B89-92D5-488C-93AE-C6C748E72C39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{350A996C-764B-409B-97C0-027DE95C591D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{350A996C-764B-409B-97C0-027DE95C591D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{350A996C-764B-409B-97C0-027DE95C591D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{350A996C-764B-409B-97C0-027DE95C591D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2ABCEB4-34F7-472F-BF41-5921A8C64F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2ABCEB4-34F7-472F-BF41-5921A8C64F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2ABCEB4-34F7-472F-BF41-5921A8C64F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2ABCEB4-34F7-472F-BF41-5921A8C64F92}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
