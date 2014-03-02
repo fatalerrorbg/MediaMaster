@@ -12,101 +12,88 @@ namespace MediaMaster.Converter
     //TODO ADD EVENTS
     public class MediaConverter
     {
-        public string FfmpegDelployPath { get; private set; }
-        public string FfmpegFileName { get; private set; }
-
-        public static void ClearAllExistingProcesses()
+        public virtual ConvertResult Convert(MediaFile inputFile, string inputFilePath, string outputFolder, MediaConverterMetadata metadata)
         {
-            Process.GetProcessesByName("ffmpeg").ToList().ForEach(x => x.Kill());
-        }
-
-        public MediaConverter(string ffmpegDeployPath)
-        {
-            this.FfmpegDelployPath = ffmpegDeployPath;
-            this.FfmpegFileName = "ffmpeg.exe";
-            this.EnsureFfmpeg();
-        }
-
-        public MediaConverter()
-            : this(Path.Combine(Path.GetTempPath(), "Ffmpeg"))
-        {
-        }
-
-        public FileInfo ConvertSingleFile(string inputFile, string outputPath, MediaConverterMetadata metadata)
-        {
-            if (File.Exists(outputPath))
+            ConvertResult result = new ConvertResult(inputFile);
+            result.IsConverted = true;
+            string destinationPath = Path.Combine(outputFolder, metadata.FileName + metadata.Extension);
+            result.ConvertedPath = destinationPath;
+            if (File.Exists(destinationPath))
             {
                 try
                 {
-                    File.Delete(outputPath);
+                    File.Delete(destinationPath);
                 }
                 catch(Exception ex)
                 {
-                    return new FileInfo(outputPath);
+                    result.IsConverted = false;
+                    result.Exceptions.Add(ex);
+                    return result;
                 }
             }
 
-            string extension = Path.GetExtension(outputPath);
+            string extension = metadata.Extension;
+            if (!this.OnMediaFileConversionStarting(inputFile, metadata))
+            {
+                result.IsConverted = false;
+                return result;
+            }
+
             Task<Process> conversionTask = Task.Factory.StartNew<Process>(() =>
                 {
                     string parameters = null;
                     switch (extension)
                     {
-                        case ".mp3":
-                             parameters = string.Format("-i \"{0}\" -ab {1}k \"{2}\"", inputFile, (int)metadata.AudioBitrate, outputPath);
+                        case SupportedConversionFormats.Mp3:
+                            parameters = string.Format("-i \"{0}\" -ab {1}k \"{2}\"", inputFilePath, (int)metadata.AudioBitrate, destinationPath);
                             break;
                         default:
-                            break;
+                            throw new NotSupportedException(string.Format("Format {0} not supported", extension));
                     }
 
-                    return this.StartNewFfmpegInstance(parameters);
+                    Process instance = Ffmpeg.FfmpegManager.Instance.CreateNewFfmpegInstance(parameters);
+                    instance.Start();
+                    instance.WaitForExit();
+
+
+                    return instance;
                 });
+
+            this.ProcessOutputStream(conversionTask.Result.StandardError);
 
             Task.WaitAll(conversionTask);
 
-            return new FileInfo(outputPath);
+            this.OnMediaFileConvertionComplete(inputFile, metadata);
+
+            return result;
         }
 
-        protected virtual Process StartNewFfmpegInstance(string parameters)
+        private void ProcessOutputStream(StreamReader reader)
         {
-            Process process = new Process();
-            process.StartInfo = new ProcessStartInfo(Path.Combine(this.FfmpegDelployPath, this.FfmpegFileName), parameters)
-                {
-                    CreateNoWindow = true,
-                    RedirectStandardInput = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                };
 
-            process.Start();
-            process.WaitForExit();
-
-            return process;
         }
 
-        public void EnsureFfmpeg()
+        public event EventHandler<MediaFileConversionEventArgs> MediaFileConversionStarting;
+
+        protected virtual bool OnMediaFileConversionStarting(MediaFile mediaFile, MediaConverterMetadata outputMetadata)
         {
-            string resourcePath = string.Format("{0}.{1}", this.GetType().Namespace, this.FfmpegFileName);
-            string deployPath = Path.Combine(this.FfmpegDelployPath, this.FfmpegFileName);
-
-            if (!Directory.Exists(this.FfmpegDelployPath))
+            if (this.MediaFileConversionStarting != null)
             {
-                Directory.CreateDirectory(FfmpegDelployPath);
+                var args = new MediaFileConversionEventArgs(mediaFile, outputMetadata);
+                this.MediaFileConversionStarting(this, args);
+                return !args.Cancel;
             }
 
-            if (File.Exists(deployPath))
-            {
-                return;
-            }
+            return true;
+        }
 
-            using (Stream exeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath))
-            {
-                byte[] buffer = new byte[exeStream.Length];
-                exeStream.Read(buffer, 0, (int)exeStream.Length);
+        public event EventHandler<MediaFileConversionEventArgs> MediaFileConvertionCompelete;
 
-                File.WriteAllBytes(deployPath, buffer);
+        protected virtual void OnMediaFileConvertionComplete(MediaFile mediaFile, MediaConverterMetadata outputMetadata)
+        {
+            if (this.MediaFileConvertionCompelete != null)
+            {
+                this.MediaFileConvertionCompelete(this, new MediaFileConversionEventArgs(mediaFile, outputMetadata));
             }
         }
     }

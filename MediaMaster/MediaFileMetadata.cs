@@ -21,6 +21,8 @@ namespace MediaMaster
 
         public string FileName { get; private set; }
 
+        public int FileLength { get; private set; }
+
         public MediaFileMetadata(string url, string thumbnailLink, string downloadLink, string fileName)
         {
             this.UniqeId = Guid.NewGuid().ToString();
@@ -29,6 +31,13 @@ namespace MediaMaster
             this.DownloadLink = downloadLink;
             this.FileName = string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
             this.FileExtension = Path.GetExtension(downloadLink);
+
+            this.InitializeFields();
+        }
+
+        protected virtual void InitializeFields()
+        {
+
         }
     }
 }

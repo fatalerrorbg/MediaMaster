@@ -53,14 +53,15 @@
     <Compile Include="Converter\MediaConverter.cs" />
     <Compile Include="Converter\MediaConverterMetadata.cs" />
     <Compile Include="Downloader\FileExtensions.cs" />
-    <Compile Include="Downloader\MediaFileConversionStartingEventArgs.cs" />
-    <Compile Include="Downloader\MediaFileDownloader.cs" />
-    <Compile Include="Downloader\MediaFileDownloaderCancelableEventArgs.cs" />
-    <Compile Include="Downloader\MediaFileDownloaderEventArgs.cs" />
-    <Compile Include="Downloader\MediaFileDownloadFinishedEvenArgs.cs" />
-    <Compile Include="Downloader\MediaFileDownloadProgressEventArgs.cs" />
-    <Compile Include="Downloader\MediaFileStartingDownloadEventArgs.cs" />
+    <Compile Include="Converter\MediaFileConversionEventArgs.cs" />
+    <Compile Include="Downloader\MediaDownloader.cs" />
+    <Compile Include="Downloader\MediaDownloaderCancelableEventArgs.cs" />
+    <Compile Include="Downloader\MediaDownloaderEventArgs.cs" />
+    <Compile Include="Downloader\MediaDownloadFinishedEvenArgs.cs" />
+    <Compile Include="Downloader\MediaDownloadProgressEventArgs.cs" />
+    <Compile Include="Downloader\MediaStartingDownloadEventArgs.cs" />
     <Compile Include="DownloadResult.cs" />
+    <Compile Include="Ffmpeg\FfmpegManager.cs" />
     <Compile Include="IMediaFileWithMetadata.cs" />
     <Compile Include="SupportedConversionFormats.cs" />
     <Compile Include="Vbox7\VboxFileMetadata.cs" />
@@ -73,9 +74,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Converter\ffmpeg.exe" />
+    <Folder Include="SoundCloud\" />
+    <Folder Include="Utils\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Ffmpeg\ffmpeg.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace MediaMaster
@@ -100,7 +101,7 @@ namespace MediaMaster
 
         public void ReInitializeMetadata()
         {
-            this.metadata = this.InitializeMetadata();
+            Task.Run(() => this.metadata = this.InitializeMetadata());
         }
     }
 }

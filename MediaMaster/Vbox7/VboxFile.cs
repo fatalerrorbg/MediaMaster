@@ -43,7 +43,11 @@ namespace MediaMaster
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(response);
 
-                fileName = doc.DocumentNode.Descendants("h3").First(x => x.Attributes["class"] != null && x.Attributes["class"].Value == "r").Descendants().First().InnerText.Replace(" / VBOX7", "");
+                fileName = doc.DocumentNode.
+                    Descendants("h3").
+                    First(x => x.Attributes["class"] != null && x.Attributes["class"].Value == "r").
+                    Descendants().
+                    First().InnerText.Replace(" / VBOX7", "");
 	        }
 
             using (WebClient wc = new WebClient())
@@ -76,7 +80,7 @@ namespace MediaMaster
             }
             catch (IndexOutOfRangeException ex)
             {
-                throw new InvalidDataException("Video url is not valid, not id can be parsed out of it", ex);
+                throw new InvalidDataException("Video url is not valid, no id can be parsed out of it", ex);
             }
 
             return id;

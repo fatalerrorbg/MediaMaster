@@ -8,6 +8,8 @@ namespace MediaMaster
     public enum FileOrigin
     {
         NotSupported,
-        Vbox7
+        Custom,
+        Vbox7,
+        SoundCloud
     }
 }

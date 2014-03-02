@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MediaMaster.Converter;
 using MediaMaster.Tests.DownloaderTests.VboxTests;
+using MediaMaster.Ffmpeg;
 
 namespace MediaMaster.Tests.ConverterTests
 {
@@ -16,36 +17,37 @@ namespace MediaMaster.Tests.ConverterTests
         [TestMethod]
         public void IsInitializedTest()
         {
-            MediaConverter converter = new MediaConverter();
+            FfmpegManager manager = new FfmpegManager();
 
-            Assert.AreEqual(Path.Combine(Path.GetTempPath(), "Ffmpeg"), converter.FfmpegDelployPath);
+            Assert.AreEqual(Path.Combine(Path.GetTempPath(), "ffmpeg"), manager.FfmpegDelployPath);
         }
 
         [TestMethod]
         public void IsEnsuringFfmpegCorrectlyTest()
         {
-            MediaConverter converter = new MediaConverter();
+            FfmpegManager manager = new FfmpegManager();
 
-            converter.EnsureFfmpeg();
+            manager.EnsureFfmpeg();
 
-            Assert.IsTrue(File.Exists(Path.Combine(converter.FfmpegDelployPath, converter.FfmpegFileName)));
+            Assert.IsTrue(File.Exists(Path.Combine(manager.FfmpegDelployPath, manager.FfmpegFileName)));
         }
 
         [TestMethod]
         public void IsConvertingToMp3()
         {
-            MediaFileDownloader downloader = new MediaFileDownloader();
-            MediaFile MediaFile = MediaFile.CreateNew(VboxDownloadConvertTests.VboxDownloadVideo);
-            string existingPath = Path.Combine(Directory.GetCurrentDirectory(), MediaFile.GetMetadata().FileName + MediaFile.GetMetadata().FileExtension);
+            MediaDownloader downloader = new MediaDownloader();
+            MediaFile mediaFile = MediaFile.CreateNew(VboxDownloadConvertTests.VboxDownloadVideo);
+            string existingPath = Path.Combine(Directory.GetCurrentDirectory(), mediaFile.GetMetadata().FileName + mediaFile.GetMetadata().FileExtension);
             if (!File.Exists(existingPath))
             {
-                downloader.Download(MediaFile, Directory.GetCurrentDirectory());
+                downloader.Download(mediaFile, Directory.GetCurrentDirectory());
             }
 
             MediaConverter converter = new MediaConverter();
-            FileInfo file = converter.ConvertSingleFile(existingPath, Path.Combine(Directory.GetCurrentDirectory(), "file.mp3"), new MediaConverterMetadata(Bitrates.Kbps192));
+            ConvertResult result = converter.Convert(mediaFile, existingPath, Directory.GetCurrentDirectory(), new MediaConverterMetadata(Bitrates.Kbps192));
 
-            Assert.IsTrue(File.Exists(file.FullName));
+            Assert.IsTrue(result.IsConverted);
+            Assert.IsTrue(File.Exists(result.ConvertedPath));
         }
 
     }

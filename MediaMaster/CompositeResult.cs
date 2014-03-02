@@ -11,6 +11,7 @@ namespace MediaMaster
         where TConversionResult : ConvertResult
     {
         public TDownloadResult DownloadResult { get; private set; }
+
         public TConversionResult ConversionResult { get; private set; } 
 
         public CompositeResult(MediaFile file, TDownloadResult downloadResult, TConversionResult conversionResult)

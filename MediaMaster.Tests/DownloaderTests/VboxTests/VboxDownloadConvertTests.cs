@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using MediaMaster.Converter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MediaMaster.Tests.DownloaderTests.VboxTests
@@ -13,7 +14,7 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void DownloadFileTest()
         {
-            MediaFileDownloader downloader = new MediaFileDownloader();
+            MediaDownloader downloader = new MediaDownloader();
             MediaFile file = MediaFile.CreateNew(VboxDownloadVideo);
             string downloadedFile = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).DownloadPath;
 
@@ -23,7 +24,7 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void DownloadFileStartingEventTest()
         {
-            MediaFileDownloader downloader = new MediaFileDownloader();
+            MediaDownloader downloader = new MediaDownloader();
             bool fired = false;
             MediaFile file = MediaFile.CreateNew(VboxDownloadVideo);
             downloader.MediaFileDownloadStarting += (s, e) => fired = true;
@@ -35,7 +36,7 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void DownloadFileProgressEventTest()
         {
-            MediaFileDownloader downloader = new MediaFileDownloader();
+            MediaDownloader downloader = new MediaDownloader();
 
             bool hasDownloadSize = false;
             bool hasMaxSize = false;
@@ -57,7 +58,7 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void DownloadFileCompletedEventTest()
         {
-            MediaFileDownloader downloader = new MediaFileDownloader();
+            MediaDownloader downloader = new MediaDownloader();
 
             bool downloaded = false;
 
@@ -75,13 +76,21 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void ConversionStartingEventTest()
         {
-            MediaFileDownloader downloader = new MediaFileDownloader();
+            MediaDownloader downloader = new MediaDownloader();
 
             MediaFile file = MediaFile.CreateNew(VboxDownloadVideo);
             string downloadedPath = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).DownloadPath;
             bool converting = false;
-            downloader.MediaFileConversionStarting += delegate { converting = true; };
-            downloader.ConvertSingleFile(file, downloadedPath, Environment.GetFolderPath(Environment.SpecialFolder.Desktop), SupportedConversionFormats.Mp3);
+
+            MediaConverter converter = new MediaConverter();
+            converter.MediaFileConversionStarting += delegate { converting = true; };
+
+            converter.Convert(file, downloadedPath, Environment.GetFolderPath(Environment.SpecialFolder.Desktop), new MediaConverterMetadata
+            {
+                AudioBitrate = Bitrates.Kbps192,
+                Extension = SupportedConversionFormats.Mp3,
+                FileName = file.GetMetadata().FileName
+            });
 
             Assert.AreEqual(true, converting);
         }
@@ -89,13 +98,21 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
         [TestMethod]
         public void ConversionEndedEventTest()
         {
-            MediaFileDownloader downloader = new MediaFileDownloader();
+            MediaDownloader downloader = new MediaDownloader();
 
             MediaFile file = MediaFile.CreateNew(VboxDownloadVideo);
             string downloadedPath = downloader.Download(file, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).DownloadPath;
             bool converting = false;
-            downloader.MediaFileConvertionCompelete += delegate { converting = true; };
-            downloader.ConvertSingleFile(file, downloadedPath, Environment.GetFolderPath(Environment.SpecialFolder.Desktop), SupportedConversionFormats.Mp3);
+
+            MediaConverter converter = new MediaConverter();
+
+            converter.MediaFileConvertionCompelete += delegate { converting = true; };
+            converter.Convert(file, downloadedPath, Environment.GetFolderPath(Environment.SpecialFolder.Desktop), new MediaConverterMetadata
+            {
+                AudioBitrate = Bitrates.Kbps192,
+                Extension = SupportedConversionFormats.Mp3,
+                FileName = file.GetMetadata().FileName
+            });
 
             Assert.AreEqual(true, converting);
         }
