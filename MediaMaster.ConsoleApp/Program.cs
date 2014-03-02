@@ -21,62 +21,55 @@ namespace MediaMaster.ConsoleApp
 
             MediaFile[] vboxFiles = files.Where(x => MediaFile.ParseFileOrigin(x) == FileOrigin.Vbox7).Select(x => new VboxFile(x)).ToArray();
 
-            //(vboxFiles[0] as VboxFile).ReInitializeMetadata();
-            //MediaDownloader downloader = new MediaDownloader();
+            MediaDownloadConvertManager manager = new MediaDownloadConvertManager();
+            manager.MaxParallelRequests = 2;
 
-            //downloader.MediaFileDownloadStarting += downloader_MediaFileDownloadStarting;
-            //downloader.MediaFileDownloadProgress += downloader_MediaFileDownloadProgress;
-            //downloader.MediaFileDownloadFinished += downloader_MediaFileDownloadFinished;
+            manager.Downloader.MediaFileDownloadStarting += downloader_MediaFileDownloadStarting;
+            manager.Downloader.MediaFileDownloadProgress += downloader_MediaFileDownloadProgress;
+            manager.Downloader.MediaFileDownloadFinished += downloader_MediaFileDownloadFinished;
 
-            //downloader.MediaFileConversionStarting += downloader_MediaFileConversionStarting;
-            //downloader.MediaFileConvertionCompelete += downloader_MediaFileConvertionCompelete;
+            manager.Converter.MediaFileConversionStarting += downloader_MediaFileConversionStarting;
+            manager.Converter.MediaFileConvertionCompelete += downloader_MediaFileConvertionCompelete;
 
-            //string desktop = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "DownloadedFiles");
-            //Directory.CreateDirectory(desktop);
-            //var results = downloader.DownloadAndConvert(vboxFiles, desktop, SupportedConversionFormats.Mp3, false);
+            string desktop = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "DownloadedFiles");
+            Directory.CreateDirectory(desktop);
+            for (int i = 0; i < vboxFiles.Length; i++)
+            {
+                manager.EnqueueDownloadAndConvertRequest(vboxFiles[i], 
+                    desktop, 
+                    new MediaConverterMetadata(Converter.Bitrates.Kbps192, vboxFiles[i].GetMetadata().FileName, SupportedConversionFormats.Mp3));
+            }
 
-            //var notDownloaded = new List<DownloadResult>();
-            //var notConverted = new List<ConvertResult>();
+            manager.StartDownload();
 
-            //foreach (var item in results)
-            //{
-            //    if (!item.DownloadResult.IsDownloaded)
-            //    {
-            //        notDownloaded.Add(item.DownloadResult);
-            //    }
-
-            //    if (!item.ConversionResult.IsConverted)
-            //    {
-            //        notConverted.Add(item.ConversionResult);
-            //    }
-            //}
-
+            Console.ReadLine();
+            Console.ReadLine();
         }
 
-        //static void downloader_MediaFileConvertionCompelete(object sender, MediaFileConversionEventArgs e)
-        //{
-        //    Console.WriteLine("Converted file {0}", e.MediaFile.GetMetadata().FileName);
-        //}
+        static void downloader_MediaFileConvertionCompelete(object sender, MediaFileConversionEventArgs e)
+        {
+            Console.WriteLine("Converted file {0}", e.MediaFile.GetMetadata().FileName);
+        }
 
-        //static void downloader_MediaFileConversionStarting(object sender, MediaFileConversionEventArgs e)
-        //{
-        //    Console.WriteLine("Converting file {0}", e.MediaFile.GetMetadata().FileName);
-        //}
+        static void downloader_MediaFileConversionStarting(object sender, MediaFileConversionEventArgs e)
+        {
+            Console.WriteLine("Converting file {0}", e.MediaFile.GetMetadata().FileName);
+        }
 
-        //static void downloader_MediaFileDownloadFinished(object sender, MediaDownloadFinishedEvenArgs e)
-        //{
-        //    Console.WriteLine("Finished Downloading file {0}", e.MediaFile.GetMetadata().FileName);
-        //}
+        static void downloader_MediaFileDownloadFinished(object sender, MediaDownloadFinishedEvenArgs e)
+        {
+            Console.WriteLine("Finished Downloading file {0}", e.MediaFile.GetMetadata().FileName);
+        }
 
-        //static void downloader_MediaFileDownloadProgress(object sender, MediaDownloadProgressEventArgs e)
-        //{
-        //    Console.Clear();
-        //    Console.WriteLine("Download Progress of file {0} - {1}", e.MediaFile.GetMetadata().FileName, e.PercentageComplete);
-        //}
+        static void downloader_MediaFileDownloadProgress(object sender, MediaDownloadProgressEventArgs e)
+        {
+            //Console.Clear();
+            //Console.WriteLine("Download Progress of file {0} - {1}", e.MediaFile.GetMetadata().FileName, e.PercentageComplete);
+        }
 
-        //static void downloader_MediaFileDownloadStarting(object sender, MediaDownloadStartingEventArgs e)
-        //{
-        //    Console.WriteLine("Downloading {0}", e.MediaFile.GetMetadata().FileName);
-        //}
+        static void downloader_MediaFileDownloadStarting(object sender, MediaDownloadStartingEventArgs e)
+        {
+            Console.WriteLine("Downloading {0}", e.MediaFile.GetMetadata().FileName);
+        }
     }
 }

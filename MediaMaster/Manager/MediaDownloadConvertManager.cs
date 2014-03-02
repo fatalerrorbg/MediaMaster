@@ -105,13 +105,9 @@ namespace MediaMaster
                 return;
             }
 
+            this.CurrentlyProcessingRequests.Add(currentRequest);
             Task.Factory.StartNew(() =>
             {
-                lock (SyncRoot)
-                {
-                    this.CurrentlyProcessingRequests.Add(currentRequest);
-                }
-
                 DownloadResult downloadResult = this.Downloader.Download(currentRequest.MediaFile, currentRequest.DownloadPath);
                 this.OnDownloadResult(downloadResult);
 
