@@ -6,10 +6,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using MediaMaster.Converter;
 
-namespace MediaMaster.Converter
+namespace MediaMaster
 {
-    //TODO ADD EVENTS
     public class MediaConverter
     {
         public virtual ConvertResult Convert(MediaFile inputFile, string inputFilePath, string outputFolder, MediaConverterMetadata metadata)

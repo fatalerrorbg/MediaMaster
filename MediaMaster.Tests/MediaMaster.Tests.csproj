@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="ConverterTests\MediaConverterTests.cs" />
     <Compile Include="DownloaderTests\VboxTests\VboxDownloadConvertTests.cs" />
+    <Compile Include="MediaDownloadConvertManagerTests\MediaDownloadConvertManagerTests.cs" />
     <Compile Include="WebFileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VboxFileTests.cs" />

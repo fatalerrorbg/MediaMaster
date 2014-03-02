@@ -63,6 +63,11 @@
     <Compile Include="DownloadResult.cs" />
     <Compile Include="Ffmpeg\FfmpegManager.cs" />
     <Compile Include="IMediaFileWithMetadata.cs" />
+    <Compile Include="Manager\DownloadConvertRequest.cs" />
+    <Compile Include="Manager\ManagerCompositeCompleteResultEventArgs.cs" />
+    <Compile Include="Manager\ManagerConvertCompleteResultEventArgs.cs" />
+    <Compile Include="Manager\ManagerDownloadCompleteResultEventArgs.cs" />
+    <Compile Include="Manager\MediaDownloadConvertManager.cs" />
     <Compile Include="SupportedConversionFormats.cs" />
     <Compile Include="Vbox7\VboxFileMetadata.cs" />
     <Compile Include="MediaFile.cs" />

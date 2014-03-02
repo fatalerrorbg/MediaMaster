@@ -19,7 +19,7 @@ namespace MediaMaster
 
         public string FileExtension { get; private set; }
 
-        public string FileName { get; private set; }
+        public string FileName { get; set; }
 
         public int FileLength { get; private set; }
 
