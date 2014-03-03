@@ -46,69 +46,7 @@ namespace MediaMaster
             return UserAgents[rnd.Next(0, UserAgents.Count)];
         }
 
-        //public IEnumerable<CompositeResult<DownloadResult, ConvertResult>> DownloadAndConvert
-        //    (IEnumerable<MediaFile> files, string tempFolderName, string convertTo = "", bool deleteCreatedFolder = true)
-        //{
-        //    string tempFolderPath = Path.Combine(Path.GetTempPath(), tempFolderName);
-        //    Directory.CreateDirectory(tempFolderPath);
-
-        //    Task<CompositeResult<DownloadResult, ConvertResult>>[] tasks = this.CreateDownloadAndConvertTasks(files, tempFolderPath, convertTo);
-
-        //    Task.WaitAll(tasks);
-
-        //    if (deleteCreatedFolder)
-        //    {
-        //        try
-        //        {
-        //            Directory.Delete(tempFolderPath, true);
-        //        }
-        //        catch { }
-        //    }
-
-        //    return tasks.Select(x => x.Result);
-        //}
-
-        //protected virtual Task<CompositeResult<DownloadResult, ConvertResult>>[] CreateDownloadAndConvertTasks(IEnumerable<MediaFile> files, string tempFolderPath, string convertTo = "")
-        //{
-        //    List<Task<CompositeResult<DownloadResult, ConvertResult>>> tasks = new List<Task<CompositeResult<DownloadResult, ConvertResult>>>();
-        //    foreach (MediaFile file in files)
-        //    {
-        //        if (file.IsValid)
-        //        {
-        //            Task<CompositeResult<DownloadResult, ConvertResult>> newTask =
-        //               Task<DownloadResult>.Factory.StartNew(() =>
-        //               {
-        //                   return this.Download(file, tempFolderPath);
-        //               })
-        //               .ContinueWith<CompositeResult<DownloadResult, ConvertResult>>(t =>
-        //               {
-        //                   DownloadResult dwResult = t.Result;
-        //                   ConvertResult cResult = new ConvertResult(dwResult.File)
-        //                   {
-        //                       IsConverted = false,
-        //                   };
-
-        //                   if (dwResult.IsDownloaded)
-        //                   {
-        //                       cResult = this.ConvertSingleFile(file, t.Result.DownloadPath, tempFolderPath, convertTo);
-        //                   }
-
-        //                   return new CompositeResult<DownloadResult, ConvertResult>(dwResult.File, dwResult, cResult);
-        //               });
-
-        //            tasks.Add(newTask);
-        //        }
-        //        else
-        //        {
-        //            tasks.Add(new Task<CompositeResult<DownloadResult, ConvertResult>>(() =>
-        //                new CompositeResult<DownloadResult, ConvertResult>(file, new DownloadResult(file) { IsDownloaded = false }, new ConvertResult(file) { IsConverted = false })));
-        //        }
-        //    }
-
-        //    return tasks.ToArray();
-        //}
-
-        public DownloadResult Download(MediaFile file, string tempFolderPath)
+        public DownloadResult Download(MediaFile file, string tempFolderPath, bool resumePreviousDownload = false)
         {
             DownloadResult result = new DownloadResult(file);
             result.IsDownloaded = true;
@@ -122,16 +60,16 @@ namespace MediaMaster
             }
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(metadata.DownloadLink);
-            request.Method = "GET";
+            request.Method = WebRequestMethods.File.DownloadFile;
             request.UserAgent = MediaDownloader.GetRandomUserAgent();
             request.KeepAlive = true;
             request.Timeout = Timeout.Infinite;
             try
             {
                 bool fileExists = File.Exists(outputPath);
-                if (!fileExists || (fileExists && !this.IsFileLocked(new FileInfo(outputPath))))
+                if (!fileExists || !this.IsFileLocked(new FileInfo(outputPath)))
                 {
-                    this.CreateFileDownloadRequest(file, outputPath, request);
+                    this.CreateFileDownloadRequest(file, outputPath, request, resumePreviousDownload);
                 }
                 else
                 {
@@ -151,19 +89,27 @@ namespace MediaMaster
             return result;
         }
 
-        protected virtual void CreateFileDownloadRequest(MediaFile file, string outputPath, HttpWebRequest request)
+        protected virtual void CreateFileDownloadRequest(MediaFile file, string outputPath, HttpWebRequest request, bool resumePreviousDownload)
         {
+            long totalRead = 0;
+            FileMode fileMode = FileMode.OpenOrCreate;
+            if (resumePreviousDownload && File.Exists(@outputPath))
+            {
+                totalRead = new FileInfo(outputPath).Length;
+                request.AddRange(totalRead);
+                fileMode = FileMode.Append;
+            }
+
             using (WebResponse response = request.GetResponse())
             {
-                long contentLength = response.ContentLength;
+                long contentLength = response.ContentLength + totalRead;
                 using (Stream responseStream = response.GetResponseStream())
                 {
                     bool canceled = false;
-                    using (FileStream fileStream = new FileStream(@outputPath, FileMode.OpenOrCreate))
+                    using (FileStream fileStream = new FileStream(@outputPath, fileMode))
                     {
                         int bytesRead = -1;
                         byte[] buffer = new byte[1024];
-                        long totalRead = 0;
                         while (bytesRead != 0)
                         {
                             if (!this.OnMediaFileDownloadProgress(file, contentLength, totalRead))
@@ -171,6 +117,11 @@ namespace MediaMaster
                                 canceled = true;
                                 break;
                             }
+
+                            if (totalRead > contentLength)
+	                        {
+                                throw new WebException("Downloaded more than actual content of file " + file.Url);
+	                        }
 
                             bytesRead = responseStream.Read(buffer, 0, buffer.Length);
                             fileStream.Write(buffer, 0, bytesRead);
@@ -182,16 +133,11 @@ namespace MediaMaster
                     {
                         this.OnMediaFileDownloadFinished(file, outputPath);
                     }
-                    else
-                    {
-                        try { File.Delete(outputPath); }
-                        catch { }
-                    }
                 }
             }
         }
 
-        protected virtual bool IsFileLocked(FileInfo file)
+        protected bool IsFileLocked(FileInfo file)
         {
             FileStream stream = null;
 
@@ -211,45 +157,6 @@ namespace MediaMaster
 
             return false;
         }
-
-        //public ConvertResult ConvertSingleFile(MediaFile file, string filePathToConvert, string tempFolderPath, string convertTo = "")
-        //{
-        //    ConvertResult result = new ConvertResult(file);
-        //    result.IsConverted = true;
-        //    if (filePathToConvert == string.Empty)
-        //    {
-        //        result.IsConverted = false;
-        //        result.Exceptions.Add(new IOException("Incorrect output path - empty"));
-        //        return result;
-        //    }
-
-        //    MediaFileMetadata metadata = file.GetMetadata();
-        //    if (convertTo == "" || convertTo != metadata.FileExtension)
-        //    {
-        //        string mediaFileOutputPath = Path.Combine(tempFolderPath, metadata.FileName + convertTo);
-        //        try
-        //        {
-        //            if (this.OnMediaFileConversionStarting(file, metadata.FileExtension, convertTo))
-        //            {
-        //                MediaConverter converter = new MediaConverter();
-        //                converter.Convert(filePathToConvert, mediaFileOutputPath, new MediaConverterMetadata(Bitrates.Kbps192));
-        //                this.OnMediaFileConvertionComplete(file, metadata.FileExtension, convertTo);
-        //            }
-
-        //            result.ConvertedPath = mediaFileOutputPath;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            result.IsConverted = false;
-        //            result.Exceptions.Add(ex);
-        //        }
-                
-        //        return result;
-        //    }
-
-        //    result.ConvertedPath = Path.Combine(tempFolderPath, metadata.FileName + metadata.FileExtension);
-        //    return result;
-        //}
 
         #region Events
 

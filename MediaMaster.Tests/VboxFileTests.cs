@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading;
 
 namespace MediaMaster.Tests
 {
@@ -49,6 +51,44 @@ namespace MediaMaster.Tests
             string actualName = file.Metadata.FileName;
 
             Assert.AreEqual(fileName, actualName);
+        }
+
+        [TestMethod]
+        public void ResumesDownloadProperly()
+        {
+            MediaDownloader downloader = new MediaDownloader();
+
+            bool canceled = false;
+            bool downloaded = false;
+            downloader.MediaFileDownloadProgress += (s, e) =>
+            {
+                if (((int)e.PercentageComplete >= 25 && (int)e.PercentageComplete <= 30) && !canceled)
+                {
+                    e.Cancel = canceled = true;
+                }
+
+                if (e.PercentageComplete >= 100)
+                {
+                    downloaded = true;
+                }
+            };
+
+            MediaFile file = MediaFile.CreateNew(MediaFileTests.VboxTestUrl);
+            downloader.Download(file, Directory.GetCurrentDirectory());
+
+            while (!canceled)
+            {
+                Thread.Sleep(500);
+            }
+
+            downloader.Download(file, Directory.GetCurrentDirectory(), true);
+
+            while (!downloaded)
+            {
+                Thread.Sleep(500);
+            }
+
+            Assert.IsTrue(downloaded);
         }
     }
 }
