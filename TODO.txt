@@ -1,0 +1,15 @@
+***************MediaMaster*********************
+
+	1. WebFile Resolver - Input url and get name, input name and get url.
+
+***********************************************
+
+****************MediaMaster.ConsoleApp**********
+
+************************************************
+
+****************MediaMaster.Desktop*************
+
+	1.Start implementing it
+
+************************************************
