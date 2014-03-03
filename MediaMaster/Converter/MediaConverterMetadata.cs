@@ -9,6 +9,13 @@ namespace MediaMaster
 {
     public class MediaConverterMetadata
     {
+        public const string DefaultFileName = "New_File";
+
+        public static MediaConverterMetadata CreateDefaultMetadata(MediaFile file)
+        {
+            return new MediaConverterMetadata(Bitrates.Kbps192, file.GetMetadata().FileName, file.GetMetadata().FileExtension);
+        }
+
         public string Extension { get; set; }
 
         public string FileName { get; set; }
@@ -16,13 +23,13 @@ namespace MediaMaster
         public Bitrates AudioBitrate { get; set; }
 
         public MediaConverterMetadata(Bitrates audioBitrate)
-            : this(audioBitrate, "New_File", ".mp3")
+            : this(audioBitrate, DefaultFileName, SupportedConversionFormats.Mp3)
         {
 
         }
 
         public MediaConverterMetadata()
-            : this(Bitrates.Kbps192, "New_File", ".mp3")
+            : this(Bitrates.Kbps192, DefaultFileName, SupportedConversionFormats.Mp3)
         {
 
         }

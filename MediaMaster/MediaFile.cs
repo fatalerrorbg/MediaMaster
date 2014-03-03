@@ -50,7 +50,7 @@ namespace MediaMaster
                 case FileOrigin.Vbox7:
                     return new VboxFile(url);
                 default:
-                    return null;
+                    throw new NotSupportedException("Url " + url + "Is not supported");
             }
         }
 

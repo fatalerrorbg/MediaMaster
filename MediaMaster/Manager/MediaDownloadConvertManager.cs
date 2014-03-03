@@ -53,15 +53,17 @@ namespace MediaMaster
             this.MaxParallelRequests = maxParallelRequests;
         }
 
-        public void EnqueueDownloadAndConvertRequest(MediaFile file, string outputPath, MediaConverterMetadata convertMetadata)
+        public DownloadConvertRequest EnqueueDownloadAndConvertRequest(MediaFile file, string outputPath, MediaConverterMetadata convertMetadata)
         {
-            this.EnqueueDownloadAndConvertRequest(file, outputPath, outputPath, convertMetadata);
+            return this.EnqueueDownloadAndConvertRequest(file, outputPath, outputPath, convertMetadata);
         }
 
-        public void EnqueueDownloadAndConvertRequest(MediaFile file, string downloadPath, string convertPath, MediaConverterMetadata convertMetadata)
+        public DownloadConvertRequest EnqueueDownloadAndConvertRequest(MediaFile file, string downloadPath, string convertPath, MediaConverterMetadata convertMetadata)
         {
             DownloadConvertRequest request = new DownloadConvertRequest(file, downloadPath, convertPath, convertMetadata);
             this.Queue.Enqueue(request);
+
+            return request;
         }
 
         public void StartDownload()

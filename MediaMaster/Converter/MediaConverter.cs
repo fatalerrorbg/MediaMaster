@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using MediaMaster.Converter;
+using MediaMaster.Ffmpeg;
 
 namespace MediaMaster
 {
@@ -51,17 +52,21 @@ namespace MediaMaster
                             throw new NotSupportedException(string.Format("Format {0} not supported", extension));
                     }
 
-                    Process instance = Ffmpeg.FfmpegManager.Instance.CreateNewFfmpegInstance(parameters);
+                    Process instance = FfmpegManager.Instance.CreateNewFfmpegInstance(parameters);
                     instance.Start();
                     instance.WaitForExit();
 
+                    this.ProcessOutputStream(instance.StandardError);
 
                     return instance;
                 });
 
-            this.ProcessOutputStream(conversionTask.Result.StandardError);
-
             Task.WaitAll(conversionTask);
+
+            if (!conversionTask.Result.HasExited)
+            {
+                conversionTask.Result.Kill();
+            }
 
             this.OnMediaFileConvertionComplete(inputFile, metadata);
 
@@ -73,6 +78,7 @@ namespace MediaMaster
 
         }
 
+        #region Events
         public event EventHandler<MediaFileConversionEventArgs> MediaFileConversionStarting;
 
         protected virtual bool OnMediaFileConversionStarting(MediaFile mediaFile, MediaConverterMetadata outputMetadata)
@@ -96,5 +102,6 @@ namespace MediaMaster
                 this.MediaFileConvertionCompelete(this, new MediaFileConversionEventArgs(mediaFile, outputMetadata));
             }
         }
+        #endregion
     }
 }
