@@ -167,6 +167,21 @@ namespace MediaMaster
             {
                 this.DownloadConvertResult(this, new ManagerCompositeCompleteResultEventArgs(result));
             }
+
+            if (this.CurrentlyProcessingRequestsCount == 0)
+            {
+                this.OnAllFilesDownloaded();
+            }
+        }
+
+        public event EventHandler AllFilesDownloaded;
+
+        protected virtual void OnAllFilesDownloaded()
+        {
+            if (this.AllFilesDownloaded != null)
+            {
+                this.AllFilesDownloaded(this, EventArgs.Empty);
+            }
         }
         #endregion
 
