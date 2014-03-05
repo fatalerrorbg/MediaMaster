@@ -74,18 +74,24 @@ namespace MediaMaster.Tests
             };
 
             MediaFile file = MediaFile.CreateNew(MediaFileTests.VboxTestUrl);
-            downloader.Download(file, Directory.GetCurrentDirectory());
-
-            while (!canceled)
+            string path = Path.Combine(Directory.GetCurrentDirectory(), file.GetMetadata().FileName + file.GetMetadata().FileExtension);
+            if (File.Exists(path))
             {
-                Thread.Sleep(500);
+                File.Delete(path);
             }
 
-            downloader.Download(file, Directory.GetCurrentDirectory(), true);
+            var firstResult = downloader.Download(file, Directory.GetCurrentDirectory());
 
-            while (!downloaded)
+            if (!firstResult.IsDownloaded || firstResult.Exceptions.Any())
             {
-                Thread.Sleep(500);
+                throw new Exception();
+            }
+
+            var secondDownload = downloader.Download(file, Directory.GetCurrentDirectory(), true);
+
+            if (!secondDownload.IsDownloaded || secondDownload.Exceptions.Any())
+            {
+                throw new Exception();
             }
 
             Assert.IsTrue(downloaded);

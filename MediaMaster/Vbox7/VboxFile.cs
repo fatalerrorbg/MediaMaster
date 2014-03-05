@@ -27,7 +27,7 @@ namespace MediaMaster
         {
             get 
             {
-                return Path.GetExtension(this.Metadata.DownloadLink) != SupportedConversionFormats.Flv;
+                return Path.GetExtension(this.Metadata.DownloadLink) != SupportedConversionFormats.Flv.Value;
             }
         }
 

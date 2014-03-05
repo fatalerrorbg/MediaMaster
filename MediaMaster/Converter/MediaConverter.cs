@@ -33,7 +33,7 @@ namespace MediaMaster
                 }
             }
 
-            string extension = metadata.Extension;
+            string extension = metadata.Extension.Value;
             if (!this.OnMediaFileConversionStarting(inputFile, metadata))
             {
                 result.IsConverted = false;
@@ -43,14 +43,11 @@ namespace MediaMaster
             Task<Process> conversionTask = Task.Factory.StartNew<Process>(() =>
                 {
                     string parameters = null;
-                    switch (extension)
-                    {
-                        case SupportedConversionFormats.Mp3:
-                            parameters = string.Format("-i \"{0}\" -ab {1}k \"{2}\"", inputFilePath, (int)metadata.AudioBitrate, destinationPath);
-                            break;
-                        default:
-                            throw new NotSupportedException(string.Format("Format {0} not supported", extension));
-                    }
+                    SupportedConversionFormats format = SupportedConversionFormats.Parse(extension);
+                    if (format == SupportedConversionFormats.Mp3)
+	                {
+                        parameters = string.Format("-i \"{0}\" -ab {1}k \"{2}\"", inputFilePath, (int)metadata.AudioBitrate, destinationPath);
+	                }
 
                     Process instance = FfmpegManager.Instance.CreateNewFfmpegInstance(parameters);
                     instance.Start();

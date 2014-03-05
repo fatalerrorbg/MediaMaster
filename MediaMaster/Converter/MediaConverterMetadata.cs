@@ -16,7 +16,7 @@ namespace MediaMaster
             return new MediaConverterMetadata(Bitrates.Kbps192, file.GetMetadata().FileName, file.GetMetadata().FileExtension);
         }
 
-        public string Extension { get; set; }
+        public SupportedConversionFormats Extension { get; set; }
 
         public string FileName { get; set; }
 
@@ -34,11 +34,16 @@ namespace MediaMaster
 
         }
 
-        public MediaConverterMetadata(Bitrates autioBitrate, string filename, string extension)
+        public MediaConverterMetadata(Bitrates autioBitrate, string filename, SupportedConversionFormats extension)
         {
             this.AudioBitrate = autioBitrate;
             this.FileName = filename;
             this.Extension = extension;
+        }
+
+        public MediaConverterMetadata(Bitrates audioBitrate, string fileName, string extension)
+            : this(audioBitrate, fileName, SupportedConversionFormats.Parse(extension))
+        {
         }
     }
 }
