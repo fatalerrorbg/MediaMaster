@@ -40,29 +40,22 @@ namespace MediaMaster
                 return result;
             }
 
-            Task<Process> conversionTask = Task.Factory.StartNew<Process>(() =>
-                {
-                    string parameters = null;
-                    SupportedConversionFormats format = SupportedConversionFormats.Parse(extension);
-                    if (format == SupportedConversionFormats.Mp3)
-	                {
-                        parameters = string.Format("-i \"{0}\" -ab {1}k \"{2}\"", inputFilePath, (int)metadata.AudioBitrate, destinationPath);
-	                }
+            string parameters = null;
+            SupportedConversionFormats format = SupportedConversionFormats.Parse(extension);
+            if (format == SupportedConversionFormats.Mp3)
+	        {
+                parameters = string.Format("-i \"{0}\" -ab {1}k \"{2}\"", inputFilePath, (int)metadata.AudioBitrate, destinationPath);
+	        }
 
-                    Process instance = FfmpegManager.Instance.CreateNewFfmpegInstance(parameters);
-                    instance.Start();
-                    instance.WaitForExit();
+            Process instance = FfmpegManager.Instance.CreateNewFfmpegInstance(parameters);
+            instance.Start();
+            instance.WaitForExit();
 
-                    this.ProcessOutputStream(instance.StandardError);
+            this.ProcessOutputStream(instance.StandardError);
 
-                    return instance;
-                });
-
-            Task.WaitAll(conversionTask);
-
-            if (!conversionTask.Result.HasExited)
+            if (!instance.HasExited)
             {
-                conversionTask.Result.Kill();
+                instance.Kill();
             }
 
             this.OnMediaFileConvertionComplete(inputFile, metadata);

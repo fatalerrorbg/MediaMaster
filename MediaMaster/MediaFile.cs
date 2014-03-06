@@ -7,35 +7,57 @@ using System.Web;
 
 namespace MediaMaster
 {
-    public abstract class MediaFile
+    public class MediaFile
     {
+        private MediaFileMetadata metadata;
+
         public FileOrigin FileOrigin { get; private set; }
 
         public string Url { get; private set; }
 
-        public virtual bool IsValid
+        public virtual bool IsValid { get { return true; } }
+
+        public bool InitializeMetadataOnDemand { get; private set; }
+
+        public MediaFileMetadata Metadata
         {
             get
             {
-                return true;
+                if (this.metadata == null)
+                {
+                    this.metadata = this.InitializeMetadata();
+                }
+
+                return this.metadata;
             }
         }
-        public MediaFile(string url, FileOrigin fileOrigin)
+
+        public MediaFile(string url, FileOrigin fileOrigin, bool initializeMetadataOnDemand = true)
         {
             this.Url = url;
             this.FileOrigin = fileOrigin;
-        }
-
-        public virtual MediaFileMetadata GetMetadata()
-        {
-            switch (this.FileOrigin)
+            this.InitializeMetadataOnDemand = initializeMetadataOnDemand;
+            if (!this.InitializeMetadataOnDemand)
             {
-                case FileOrigin.Vbox7:
-                    return (this as VboxFile).Metadata;
-                default:
-                    return null;
+                this.metadata = this.InitializeMetadata();
             }
         }
+
+        protected virtual MediaFileMetadata InitializeMetadata()
+        {
+            return MediaFileMetadata.DefaultMetadata;
+        }
+
+        //public virtual MediaFileMetadata Metadata
+        //{
+        //    switch (this.FileOrigin)
+        //    {
+        //        case FileOrigin.Vbox7:
+        //            return (this as VboxFile).Metadata;
+        //        default:
+        //            return null;
+        //    }
+        //}
 
         public static MediaFile CreateNew(string url)
         {
@@ -65,43 +87,42 @@ namespace MediaMaster
         }
     }
 
-    public abstract class MediaFile<TMetadata> : 
-        MediaFile,
-        IMediaFileWithMetadata<TMetadata>
-        where TMetadata : MediaFileMetadata
-    {
-        private TMetadata metadata;
+    //public abstract class MediaFile<TMetadata> : 
+    //    MediaFile,
+    //    IMediaFileWithMetadata<TMetadata>
+    //    where TMetadata : MediaFileMetadata
+    //{
+    //    private TMetadata metadata;
 
-        public MediaFile(string url, FileOrigin fileOrigin, bool initializeMetadataOnDemand = true)
-            :base(url, fileOrigin)
-        {
-            this.InitializeMetadataOnDemand = initializeMetadataOnDemand;
-            if (!this.InitializeMetadataOnDemand)
-            {
-                this.ReInitializeMetadata();
-            }
-        }
+    //    public MediaFile(string url, FileOrigin fileOrigin, bool initializeMetadataOnDemand = true)
+    //        :base(url, fileOrigin)
+    //    {
+    //        this.InitializeMetadataOnDemand = initializeMetadataOnDemand;
+    //        if (!this.InitializeMetadataOnDemand)
+    //        {
+    //            this.ReInitializeMetadata();
+    //        }
+    //    }
 
-        public TMetadata Metadata
-        {
-            get
-            {
-                if (this.metadata == null)
-                {
-                    this.metadata = this.InitializeMetadata();
-                }
+    //    public TMetadata Metadata
+    //    {
+    //        get
+    //        {
+    //            if (this.metadata == null)
+    //            {
+    //                this.metadata = this.InitializeMetadata();
+    //            }
 
-                return this.metadata;
-            }
-        }
+    //            return this.metadata;
+    //        }
+    //    }
 
-        public bool InitializeMetadataOnDemand { get; private set; }
 
-        protected abstract TMetadata InitializeMetadata();
+    //    protected abstract TMetadata InitializeMetadata();
 
-        public void ReInitializeMetadata()
-        {
-            Task.Run(() => this.metadata = this.InitializeMetadata());
-        }
-    }
+    //    public void ReInitializeMetadata()
+    //    {
+    //        this.metadata = this.InitializeMetadata();
+    //    }
+    //}
 }

@@ -7,8 +7,10 @@ using System.IO;
 
 namespace MediaMaster
 {
-    public abstract class MediaFileMetadata
+    public class MediaFileMetadata
     {
+        public static readonly MediaFileMetadata DefaultMetadata = new MediaFileMetadata();
+
         public string UniqeId { get; private set; }
 
         public string Url { get; private set; }
@@ -33,6 +35,10 @@ namespace MediaMaster
             this.FileExtension = Path.GetExtension(downloadLink);
 
             this.InitializeFields();
+        }
+
+        private MediaFileMetadata()
+        {
         }
 
         protected virtual void InitializeFields()

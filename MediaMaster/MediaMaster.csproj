@@ -69,6 +69,7 @@
     <Compile Include="Manager\ManagerDownloadCompleteResultEventArgs.cs" />
     <Compile Include="Manager\MediaDownloadConvertManager.cs" />
     <Compile Include="SupportedConversionFormats.cs" />
+    <Compile Include="Utils\MediaHelper.cs" />
     <Compile Include="Vbox7\VboxFileMetadata.cs" />
     <Compile Include="MediaFile.cs" />
     <Compile Include="FileOrigin.cs" />
@@ -81,7 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SoundCloud\" />
-    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Ffmpeg\ffmpeg.exe" />

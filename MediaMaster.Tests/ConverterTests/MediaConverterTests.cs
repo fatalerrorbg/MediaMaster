@@ -37,7 +37,7 @@ namespace MediaMaster.Tests.ConverterTests
         {
             MediaDownloader downloader = new MediaDownloader();
             MediaFile mediaFile = MediaFile.CreateNew(VboxDownloadConvertTests.VboxDownloadVideo);
-            string existingPath = Path.Combine(Directory.GetCurrentDirectory(), mediaFile.GetMetadata().FileName + mediaFile.GetMetadata().FileExtension);
+            string existingPath = Path.Combine(Directory.GetCurrentDirectory(), mediaFile.Metadata.FileName + mediaFile.Metadata.FileExtension);
             if (!File.Exists(existingPath))
             {
                 downloader.Download(mediaFile, Directory.GetCurrentDirectory());

@@ -5,10 +5,11 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using HtmlAgilityPack;
+using MediaMaster.Utils;
 
 namespace MediaMaster
 {
-    public class VboxFile : MediaFile<VboxFileMetadata>
+    public class VboxFile : MediaFile
     {
         public const string InfoUrl = "http://www.vbox7.com/etc/ext.do?key={0}&antiCacheStamp=5316311";
         public const string DownloadUrlKey = "flv_addr";
@@ -31,24 +32,21 @@ namespace MediaMaster
             }
         }
 
-        protected override VboxFileMetadata InitializeMetadata()
+        protected override MediaFileMetadata InitializeMetadata()
         {
             string infoResponse = string.Empty;
             string videoId = this.ParseVideoId();
             string fileName = string.Empty;
 
-            using(WebClient wc = new WebClient())
-	        {
-		        string response = wc.DownloadString(string.Format(Constants.GoogleSearchQueryUrl, this.Url));
-                HtmlDocument doc = new HtmlDocument();
-                doc.LoadHtml(response);
+            string response = MediaHelper.SendGoogleSearchRequest(this.Url);
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(response);
 
-                fileName = doc.DocumentNode.
-                    Descendants("h3").
-                    First(x => x.Attributes["class"] != null && x.Attributes["class"].Value == "r").
-                    Descendants().
-                    First().InnerText.Replace(" / VBOX7", "");
-	        }
+            fileName = doc.DocumentNode.
+                Descendants("h3").
+                First(x => x.Attributes["class"] != null && x.Attributes["class"].Value == "r").
+                Descendants().
+                First().InnerText.Replace(" / VBOX7", "");
 
             using (WebClient wc = new WebClient())
             {

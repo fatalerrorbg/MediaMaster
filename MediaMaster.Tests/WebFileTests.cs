@@ -42,7 +42,7 @@ namespace MediaMaster.Tests
         public void GetsCorrectMetadataTest()
         {
             MediaFile MediaFile = MediaFile.CreateNew(VboxTestUrl);
-            MediaFileMetadata metadata = MediaFile.GetMetadata();
+            MediaFileMetadata metadata = MediaFile.Metadata;
 
             bool isVboxMetadata = metadata is VboxFileMetadata;
 

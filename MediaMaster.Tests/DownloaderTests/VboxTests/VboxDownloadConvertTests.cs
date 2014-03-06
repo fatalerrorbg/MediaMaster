@@ -89,7 +89,7 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
             {
                 AudioBitrate = Bitrates.Kbps192,
                 Extension = SupportedConversionFormats.Mp3,
-                FileName = file.GetMetadata().FileName
+                FileName = file.Metadata.FileName
             });
 
             Assert.AreEqual(true, converting);
@@ -111,7 +111,7 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
             {
                 AudioBitrate = Bitrates.Kbps192,
                 Extension = SupportedConversionFormats.Mp3,
-                FileName = file.GetMetadata().FileName
+                FileName = file.Metadata.FileName
             });
 
             Assert.AreEqual(true, converting);

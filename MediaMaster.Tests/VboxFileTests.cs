@@ -18,7 +18,7 @@ namespace MediaMaster.Tests
             VboxFile file = MediaFile.CreateNew(MediaFileTests.VboxTestUrl) as VboxFile;
             string id = "a40c203d8b";
 
-            Assert.AreEqual(file.Metadata.VideoId, id);
+            Assert.AreEqual((file.Metadata as VboxFileMetadata).VideoId, id);
         }
 
         [TestMethod]
@@ -26,9 +26,9 @@ namespace MediaMaster.Tests
         {
             MediaFile downloader = MediaFile.CreateNew(MediaFileTests.VboxTestUrl);
 
-            string downloadLink = downloader.GetMetadata().DownloadLink;
+            string downloadLink = downloader.Metadata.DownloadLink;
 
-            Assert.AreEqual("http://media09.vbox7.com/s/a4/a40c203d8br20619d829.mp4", downloadLink);
+            Assert.AreEqual("http://media06.vbox7.com/s/a4/a40c203d8br20619d829.mp4", downloadLink);
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@ namespace MediaMaster.Tests
         {
             MediaFile downloader = MediaFile.CreateNew(MediaFileTests.VboxTestUrl);
 
-            string thumbnailLink = downloader.GetMetadata().ThumbnailLink;
+            string thumbnailLink = downloader.Metadata.ThumbnailLink;
 
             Assert.AreEqual("i49.vbox7.com/o/a40/a40c203d8b0.jpg", thumbnailLink);
         }
@@ -74,7 +74,7 @@ namespace MediaMaster.Tests
             };
 
             MediaFile file = MediaFile.CreateNew(MediaFileTests.VboxTestUrl);
-            string path = Path.Combine(Directory.GetCurrentDirectory(), file.GetMetadata().FileName + file.GetMetadata().FileExtension);
+            string path = Path.Combine(Directory.GetCurrentDirectory(), file.Metadata.FileName + file.Metadata.FileExtension);
             if (File.Exists(path))
             {
                 File.Delete(path);

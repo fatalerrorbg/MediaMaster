@@ -13,7 +13,7 @@ namespace MediaMaster
 
         public static MediaConverterMetadata CreateDefaultMetadata(MediaFile file)
         {
-            return new MediaConverterMetadata(Bitrates.Kbps192, file.GetMetadata().FileName, file.GetMetadata().FileExtension);
+            return new MediaConverterMetadata(Bitrates.Kbps192, file.Metadata.FileName, file.Metadata.FileExtension);
         }
 
         public SupportedConversionFormats Extension { get; set; }

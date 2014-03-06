@@ -50,7 +50,7 @@ namespace MediaMaster
         {
             DownloadResult result = new DownloadResult(file);
             result.IsDownloaded = true;
-            MediaFileMetadata metadata = file.GetMetadata();
+            MediaFileMetadata metadata = file.Metadata;
             string outputPath = Path.Combine(tempFolderPath, metadata.FileName + metadata.FileExtension);
 
             if (!this.OnMediaFileDownloadStarting(file, outputPath))
@@ -80,7 +80,7 @@ namespace MediaMaster
             }
             catch (WebException webEx)
             {
-                Debug.WriteLine("File " + file.GetMetadata().FileName + " Could not be downloaded " + webEx + " " + webEx.InnerException);
+                Debug.WriteLine("File " + file.Metadata.FileName + " Could not be downloaded " + webEx + " " + webEx.InnerException);
                 result.IsDownloaded = false;
                 result.Exceptions.Add(webEx);
             }

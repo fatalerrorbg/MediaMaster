@@ -37,7 +37,7 @@ namespace MediaMaster.ConsoleApp
             {
                 manager.EnqueueDownloadAndConvertRequest(vboxFiles[i], 
                     desktop, 
-                    new MediaConverterMetadata(Converter.Bitrates.Kbps192, vboxFiles[i].GetMetadata().FileName, SupportedConversionFormats.Mp3));
+                    new MediaConverterMetadata(Converter.Bitrates.Kbps192, vboxFiles[i].Metadata.FileName, SupportedConversionFormats.Mp3));
             }
 
             manager.StartDownload();
@@ -48,28 +48,28 @@ namespace MediaMaster.ConsoleApp
 
         static void downloader_MediaFileConvertionCompelete(object sender, MediaFileConversionEventArgs e)
         {
-            Console.WriteLine("Converted file {0}", e.MediaFile.GetMetadata().FileName);
+            Console.WriteLine("Converted file {0}", e.MediaFile.Metadata.FileName);
         }
 
         static void downloader_MediaFileConversionStarting(object sender, MediaFileConversionEventArgs e)
         {
-            Console.WriteLine("Converting file {0}", e.MediaFile.GetMetadata().FileName);
+            Console.WriteLine("Converting file {0}", e.MediaFile.Metadata.FileName);
         }
 
         static void downloader_MediaFileDownloadFinished(object sender, MediaDownloadFinishedEvenArgs e)
         {
-            Console.WriteLine("Finished Downloading file {0}", e.MediaFile.GetMetadata().FileName);
+            Console.WriteLine("Finished Downloading file {0}", e.MediaFile.Metadata.FileName);
         }
 
         static void downloader_MediaFileDownloadProgress(object sender, MediaDownloadProgressEventArgs e)
         {
             //Console.Clear();
-            //Console.WriteLine("Download Progress of file {0} - {1}", e.MediaFile.GetMetadata().FileName, e.PercentageComplete);
+            //Console.WriteLine("Download Progress of file {0} - {1}", e.MediaFile.Metadata.FileName, e.PercentageComplete);
         }
 
         static void downloader_MediaFileDownloadStarting(object sender, MediaDownloadStartingEventArgs e)
         {
-            Console.WriteLine("Downloading {0}", e.MediaFile.GetMetadata().FileName);
+            Console.WriteLine("Downloading {0}", e.MediaFile.Metadata.FileName);
         }
     }
 }
