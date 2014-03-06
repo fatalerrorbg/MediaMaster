@@ -72,21 +72,6 @@ namespace MediaMaster.Ffmpeg
                     WindowStyle = ProcessWindowStyle.Hidden,
                 };
 
-            //TODO: 
-            /*instance.Start();
-
-                    using (FileStream fs = new FileStream("file.txt", FileMode.OpenOrCreate))
-                    {
-                        while (!instance.StandardError.EndOfStream)
-                        {
-                            string line = instance.StandardError.ReadLine() + Environment.NewLine;
-                            var byteArr = this.GetBytes(line);
-                            fs.Write(byteArr, 0, byteArr.Length);
-                        }   
-                    }
-
-                    instance.WaitForExit();*/
-
             return process;
         }
 

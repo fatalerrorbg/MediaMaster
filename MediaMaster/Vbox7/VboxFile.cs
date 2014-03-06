@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using HtmlAgilityPack;
+using MediaMaster.Resolver;
 using MediaMaster.Utils;
 
 namespace MediaMaster
@@ -38,15 +39,7 @@ namespace MediaMaster
             string videoId = this.ParseVideoId();
             string fileName = string.Empty;
 
-            string response = MediaHelper.SendGoogleSearchRequest(this.Url);
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(response);
-
-            fileName = doc.DocumentNode.
-                Descendants("h3").
-                First(x => x.Attributes["class"] != null && x.Attributes["class"].Value == "r").
-                Descendants().
-                First().InnerText.Replace(" / VBOX7", "");
+            fileName = new VboxResolver().ResolveByUrl(this.Url);
 
             using (WebClient wc = new WebClient())
             {

@@ -48,17 +48,6 @@ namespace MediaMaster
             return MediaFileMetadata.DefaultMetadata;
         }
 
-        //public virtual MediaFileMetadata Metadata
-        //{
-        //    switch (this.FileOrigin)
-        //    {
-        //        case FileOrigin.Vbox7:
-        //            return (this as VboxFile).Metadata;
-        //        default:
-        //            return null;
-        //    }
-        //}
-
         public static MediaFile CreateNew(string url)
         {
             if (url == null)
@@ -86,43 +75,4 @@ namespace MediaMaster
             return FileOrigin.NotSupported;
         }
     }
-
-    //public abstract class MediaFile<TMetadata> : 
-    //    MediaFile,
-    //    IMediaFileWithMetadata<TMetadata>
-    //    where TMetadata : MediaFileMetadata
-    //{
-    //    private TMetadata metadata;
-
-    //    public MediaFile(string url, FileOrigin fileOrigin, bool initializeMetadataOnDemand = true)
-    //        :base(url, fileOrigin)
-    //    {
-    //        this.InitializeMetadataOnDemand = initializeMetadataOnDemand;
-    //        if (!this.InitializeMetadataOnDemand)
-    //        {
-    //            this.ReInitializeMetadata();
-    //        }
-    //    }
-
-    //    public TMetadata Metadata
-    //    {
-    //        get
-    //        {
-    //            if (this.metadata == null)
-    //            {
-    //                this.metadata = this.InitializeMetadata();
-    //            }
-
-    //            return this.metadata;
-    //        }
-    //    }
-
-
-    //    protected abstract TMetadata InitializeMetadata();
-
-    //    public void ReInitializeMetadata()
-    //    {
-    //        this.metadata = this.InitializeMetadata();
-    //    }
-    //}
 }

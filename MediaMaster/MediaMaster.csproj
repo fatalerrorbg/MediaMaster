@@ -68,6 +68,8 @@
     <Compile Include="Manager\ManagerConvertCompleteResultEventArgs.cs" />
     <Compile Include="Manager\ManagerDownloadCompleteResultEventArgs.cs" />
     <Compile Include="Manager\MediaDownloadConvertManager.cs" />
+    <Compile Include="Resolver\MediaResolver.cs" />
+    <Compile Include="Resolver\VboxResolver.cs" />
     <Compile Include="SupportedConversionFormats.cs" />
     <Compile Include="Utils\MediaHelper.cs" />
     <Compile Include="Vbox7\VboxFileMetadata.cs" />

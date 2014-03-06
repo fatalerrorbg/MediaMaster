@@ -15,6 +15,7 @@ namespace MediaMaster
         public static readonly SupportedConversionFormats Avi = new SupportedConversionFormats("Avi", ".avi");
 
         public string Name { get; private set; }
+
         public string Value { get; private set; }
         
         private SupportedConversionFormats (string name, string value)
