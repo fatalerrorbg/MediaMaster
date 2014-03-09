@@ -9,5 +9,7 @@ namespace MediaMaster
     {
         public static string GoogleSearchQueryUrl = "https://www.google.bg/search?q={0}";
         public static string Vbox7 = "vbox7.com";
+        public static string SoundCloud = "soundcloud.com";
+        public static string Exe = ".exe";
     }
 }

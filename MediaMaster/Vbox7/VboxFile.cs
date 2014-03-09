@@ -33,7 +33,7 @@ namespace MediaMaster
             }
         }
 
-        protected override MediaFileMetadata InitializeMetadata()
+        public override MediaFileMetadata InitializeMetadata()
         {
             string infoResponse = string.Empty;
             string videoId = this.ParseVideoId();

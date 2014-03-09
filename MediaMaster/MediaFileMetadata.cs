@@ -11,19 +11,19 @@ namespace MediaMaster
     {
         public static readonly MediaFileMetadata DefaultMetadata = new MediaFileMetadata();
 
-        public string UniqeId { get; private set; }
+        public string UniqeId { get; protected set; }
 
-        public string Url { get; private set; }
+        public string Url { get; protected set; }
 
-        public string ThumbnailLink { get; private set; }
+        public string ThumbnailLink { get; protected set; }
 
-        public string DownloadLink { get; private set; }
+        public string DownloadLink { get; protected set; }
 
-        public string FileExtension { get; private set; }
+        public string FileExtension { get; protected set; }
 
         public string FileName { get; set; }
 
-        public int FileLength { get; private set; }
+        public int FileLength { get; protected set; }
 
         public MediaFileMetadata(string url, string thumbnailLink, string downloadLink, string fileName)
         {
@@ -43,7 +43,6 @@ namespace MediaMaster
 
         protected virtual void InitializeFields()
         {
-
         }
     }
 }

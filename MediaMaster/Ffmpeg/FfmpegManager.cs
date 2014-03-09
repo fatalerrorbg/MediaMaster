@@ -42,7 +42,10 @@ namespace MediaMaster.Ffmpeg
 
         public void ClearAllExistingProcesses()
         {
-            Process.GetProcessesByName(Ffmpeg).ToList().ForEach(x => x.Kill());
+            foreach (var proc in Process.GetProcessesByName(Ffmpeg))
+            {
+                proc.Kill();
+            }
         }
 
         public FfmpegManager()
@@ -53,7 +56,7 @@ namespace MediaMaster.Ffmpeg
         public FfmpegManager(string ffmpegDeployPath)
         {
             this.FfmpegDelployPath = ffmpegDeployPath;
-            this.FfmpegFileName = Ffmpeg + ".exe";
+            this.FfmpegFileName = Ffmpeg + Constants.Exe;
             this.EnsureFfmpeg();
         }
 
@@ -63,14 +66,29 @@ namespace MediaMaster.Ffmpeg
 
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(Path.Combine(this.FfmpegDelployPath, this.FfmpegFileName), parameters)
-                {
-                    CreateNoWindow = true,
-                    RedirectStandardInput = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                };
+            {
+                CreateNoWindow = true,
+                RedirectStandardInput = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                WindowStyle = ProcessWindowStyle.Hidden,
+            };
+
+            //TODO: 
+            /*instance.Start();
+
+                    using (FileStream fs = new FileStream("file.txt", FileMode.OpenOrCreate))
+                    {
+                        while (!instance.StandardError.EndOfStream)
+                        {
+                            string line = instance.StandardError.ReadLine() + Environment.NewLine;
+                            var byteArr = this.GetBytes(line);
+                            fs.Write(byteArr, 0, byteArr.Length);
+                        }   
+                    }
+
+                    instance.WaitForExit();*/
 
             return process;
         }

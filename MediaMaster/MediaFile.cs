@@ -43,7 +43,7 @@ namespace MediaMaster
             }
         }
 
-        protected virtual MediaFileMetadata InitializeMetadata()
+        public virtual MediaFileMetadata InitializeMetadata()
         {
             return MediaFileMetadata.DefaultMetadata;
         }
@@ -60,6 +60,8 @@ namespace MediaMaster
             {
                 case FileOrigin.Vbox7:
                     return new VboxFile(url);
+                case FileOrigin.SoundCloud:
+                    return new SoundCloudFile(url);
                 default:
                     throw new NotSupportedException("Url " + url + "Is not supported");
             }
@@ -67,9 +69,14 @@ namespace MediaMaster
 
         public static FileOrigin ParseFileOrigin(string url)
         {
+            url = url.ToLower();
             if (url.Contains(Constants.Vbox7))
             {
                 return FileOrigin.Vbox7;
+            }
+            else if (url.Contains(Constants.SoundCloud))
+            {
+                return FileOrigin.SoundCloud;
             }
 
             return FileOrigin.NotSupported;

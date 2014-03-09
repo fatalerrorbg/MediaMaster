@@ -11,9 +11,14 @@ namespace MediaMaster.Utils
     {
         public static string SendGoogleSearchRequest(string searchString)
         {
+            return SendWebRequest(string.Format(Constants.GoogleSearchQueryUrl, searchString));
+        }
+
+        public static string SendWebRequest(string url)
+        {
             using (WebClient wc = new WebClient())
             {
-                return wc.DownloadString(string.Format(Constants.GoogleSearchQueryUrl, searchString));
+                return wc.DownloadString(url);
             }
         }
     }

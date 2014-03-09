@@ -50,13 +50,15 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ConverterTests\MediaConverterTests.cs" />
-    <Compile Include="DownloaderTests\VboxTests\VboxDownloadConvertTests.cs" />
-    <Compile Include="MediaDownloadConvertManagerTests\MediaDownloadConvertManagerTests.cs" />
-    <Compile Include="Resolver\VboxResolverTests.cs" />
+    <Compile Include="SoundCloudTests\BasicSoundCloudFileTests.cs" />
+    <Compile Include="SoundCloudTests\SoundCloudDownloadTests.cs" />
+    <Compile Include="VboxTests\MediaConverterTests.cs" />
+    <Compile Include="VboxTests\VboxDownloadConvertTests.cs" />
+    <Compile Include="VboxTests\MediaDownloadConvertManagerTests.cs" />
+    <Compile Include="VboxTests\VboxResolverTests.cs" />
     <Compile Include="WebFileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VboxFileTests.cs" />
+    <Compile Include="VboxTests\VboxFileTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MediaMaster\MediaMaster.csproj">
@@ -64,6 +66,7 @@
       <Name>MediaMaster</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

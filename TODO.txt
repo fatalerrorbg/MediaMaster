@@ -1,6 +1,8 @@
 ***************MediaMaster*********************
 
-	1. WebFile Resolver - Input url and get name, input name and get url.
+1. Read conversion progress
+2. SoundCloud
+3. Add plugins support
 
 ***********************************************
 
