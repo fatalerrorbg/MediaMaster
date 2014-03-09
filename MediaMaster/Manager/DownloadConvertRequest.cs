@@ -7,7 +7,7 @@ using MediaMaster.Converter;
 
 namespace MediaMaster
 {
-    public class DownloadConvertRequest
+    public class DownloadConvertRequest : IComparable<DownloadConvertRequest>
     {
         public MediaFile MediaFile { get; private set; }
 
@@ -17,6 +17,8 @@ namespace MediaMaster
 
         public MediaConverterMetadata ConvertMetadata { get; private set; }
 
+        public int Priority { get; set; }
+
         public DownloadConvertRequest(MediaFile mediaFile, string downloadPath, string convertPath, MediaConverterMetadata convertMetadata)
         {
             this.MediaFile = mediaFile;
@@ -24,5 +26,14 @@ namespace MediaMaster
             this.ConvertPath = convertPath;
             this.ConvertMetadata = convertMetadata;
         }
+
+        #region IComparable<DownloadConvertRequest> Members
+
+        public int CompareTo(DownloadConvertRequest other)
+        {
+            return this.Priority.CompareTo(other.Priority);
+        }
+
+        #endregion
     }
 }

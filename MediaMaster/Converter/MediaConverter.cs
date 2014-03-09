@@ -25,7 +25,7 @@ namespace MediaMaster
                 {
                     File.Delete(destinationPath);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     result.IsConverted = false;
                     result.Exceptions.Add(ex);
@@ -43,16 +43,16 @@ namespace MediaMaster
             string parameters = null;
             SupportedConversionFormats format = SupportedConversionFormats.Parse(extension);
             if (format == SupportedConversionFormats.Mp3)
-	        {
+            {
                 parameters = string.Format("-i \"{0}\" -ab {1}k \"{2}\"", inputFilePath, (int)metadata.AudioBitrate, destinationPath);
-	        }
+            }
 
             Process instance = FfmpegManager.Instance.CreateNewFfmpegInstance(parameters);
             instance.Start();
-            instance.WaitForExit();
 
             this.ProcessOutputStream(instance.StandardError);
 
+            instance.WaitForExit();
             if (!instance.HasExited)
             {
                 instance.Kill();
@@ -65,7 +65,13 @@ namespace MediaMaster
 
         private void ProcessOutputStream(StreamReader reader)
         {
-
+            //TODO: 
+            /*{
+                        while (!reader.EndOfStream)
+                        {
+                            string line = instance.StandardError.ReadLine() + Environment.NewLine;
+                        }   
+                    }*/
         }
 
         #region Events
