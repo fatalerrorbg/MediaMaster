@@ -19,7 +19,7 @@ namespace MediaMaster.ConsoleApp
                 files.Add(line);
             }
 
-            MediaFile[] vboxFiles = files.Where(x => MediaFile.ParseFileOrigin(x) == FileOrigin.Vbox7).Select(x => new VboxFile(x)).ToArray();
+            MediaFile[] vboxFiles = files.Select(x => MediaFile.CreateNew(x)).Where(x => x != null).ToArray();
 
             MediaDownloadConvertManager manager = new MediaDownloadConvertManager();
             manager.MaxParallelRequests = 2;
