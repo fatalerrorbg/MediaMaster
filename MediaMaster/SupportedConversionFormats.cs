@@ -7,25 +7,25 @@ using System.Threading.Tasks;
 
 namespace MediaMaster
 {
-    public sealed class SupportedConversionFormat
+    public sealed class SupportedConversionFormats
     {
-        public static readonly SupportedConversionFormat None = new SupportedConversionFormat("", "");
-        public static readonly SupportedConversionFormat Mp3 = new SupportedConversionFormat("Mp3", ".mp3");
-        public static readonly SupportedConversionFormat Mp4 = new SupportedConversionFormat("Mp4", ".mp4");
-        public static readonly SupportedConversionFormat Flv = new SupportedConversionFormat("Flv", ".flv");
-        public static readonly SupportedConversionFormat Avi = new SupportedConversionFormat("Avi", ".avi");
+        public static readonly SupportedConversionFormats None = new SupportedConversionFormats("", "");
+        public static readonly SupportedConversionFormats Mp3 = new SupportedConversionFormats("Mp3", ".mp3");
+        public static readonly SupportedConversionFormats Mp4 = new SupportedConversionFormats("Mp4", ".mp4");
+        public static readonly SupportedConversionFormats Flv = new SupportedConversionFormats("Flv", ".flv");
+        public static readonly SupportedConversionFormats Avi = new SupportedConversionFormats("Avi", ".avi");
 
         public string Name { get; private set; }
 
         public string Value { get; private set; }
         
-        private SupportedConversionFormat (string name, string value)
+        private SupportedConversionFormats (string name, string value)
         {
             this.Name = name;
             this.Value = value;
         }
 
-        private SupportedConversionFormat(string nameValue)
+        private SupportedConversionFormats(string nameValue)
             : this(nameValue, nameValue)
         {
         }
@@ -35,12 +35,12 @@ namespace MediaMaster
             return this.Value;
         }
 
-        public static SupportedConversionFormat Parse(string extension)
+        public static SupportedConversionFormats Parse(string extension)
         {
-            FieldInfo[] fields = typeof(SupportedConversionFormat).GetFields(BindingFlags.Public | BindingFlags.Static);
+            FieldInfo[] fields = typeof(SupportedConversionFormats).GetFields(BindingFlags.Public | BindingFlags.Static);
             foreach (var field in fields)
             {
-                var format = field.GetValue(null) as SupportedConversionFormat;
+                var format = field.GetValue(null) as SupportedConversionFormats;
                 string value = format.Value;
                 if (string.Equals(value, extension, StringComparison.InvariantCultureIgnoreCase))
                 {

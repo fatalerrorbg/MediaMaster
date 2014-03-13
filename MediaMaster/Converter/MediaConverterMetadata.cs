@@ -11,6 +11,8 @@ namespace MediaMaster
     {
         public const string DefaultFileName = "New_File";
 
+        public static MediaConverterMetadata Default = new MediaConverterMetadata(default(Bitrates), DefaultFileName, SupportedConversionFormats.None);
+
         public static MediaConverterMetadata CreateDefaultMetadata(MediaFile file)
         {
             return new MediaConverterMetadata(Bitrates.Kbps192, file.Metadata.FileName, file.Metadata.FileExtension);

@@ -42,7 +42,7 @@ namespace MediaMaster.ConsoleApp
                 }
                 else
                 {
-                    metadata = new MediaConverterMetadata(Converter.Bitrates.Kbps192, vboxFiles[i].Metadata.FileName, SupportedConversionFormat.Mp3);
+                    metadata = new MediaConverterMetadata(Converter.Bitrates.Kbps192, vboxFiles[i].Metadata.FileName, SupportedConversionFormats.Mp3);
                 }
 
                 manager.EnqueueDownloadAndConvertRequest(vboxFiles[i], desktop, metadata);

@@ -47,8 +47,8 @@ namespace MediaMaster
             }
 
             string parameters = null;
-            SupportedConversionFormat format = SupportedConversionFormat.Parse(extension);
-            if (format == SupportedConversionFormat.Mp3)
+            SupportedConversionFormats format = SupportedConversionFormats.Parse(extension);
+            if (format == SupportedConversionFormats.Mp3)
             {
                 parameters = string.Format("-i \"{0}\" -ab {1}k \"{2}\"", inputFilePath, (int)metadata.AudioBitrate, destinationPath);
             }

@@ -9,7 +9,7 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
     public class VboxDownloadConvertTests
     {
         public const string VboxDownloadVideo = "http://www.vbox7.com/play:86c35f6759";
-        public string VboxDownloadedVideoPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Зайчета атакуват момиче - Vbox7.com" + SupportedConversionFormat.Mp4);
+        public string VboxDownloadedVideoPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Зайчета атакуват момиче - Vbox7.com" + SupportedConversionFormats.Mp4);
 
         [TestMethod]
         public void DownloadFileTest()
@@ -88,7 +88,7 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
             converter.Convert(file, downloadedPath, Environment.GetFolderPath(Environment.SpecialFolder.Desktop), new MediaConverterMetadata
             {
                 AudioBitrate = Bitrates.Kbps192,
-                Extension = SupportedConversionFormat.Mp3,
+                Extension = SupportedConversionFormats.Mp3,
                 FileName = file.Metadata.FileName
             });
 
@@ -110,7 +110,7 @@ namespace MediaMaster.Tests.DownloaderTests.VboxTests
             converter.Convert(file, downloadedPath, Environment.GetFolderPath(Environment.SpecialFolder.Desktop), new MediaConverterMetadata
             {
                 AudioBitrate = Bitrates.Kbps192,
-                Extension = SupportedConversionFormat.Mp3,
+                Extension = SupportedConversionFormats.Mp3,
                 FileName = file.Metadata.FileName
             });
 

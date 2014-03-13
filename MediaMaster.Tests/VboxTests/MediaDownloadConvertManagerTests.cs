@@ -24,7 +24,7 @@ namespace MediaMaster.Tests.MediaDownloadConvertManagerTests
                 vboxFile.Metadata.FileName = "file " + i;
                 manager.EnqueueDownloadAndConvertRequest(vboxFile,
                     Directory.GetCurrentDirectory(),
-                    new MediaConverterMetadata(Converter.Bitrates.Kbps192, "file " + i, SupportedConversionFormat.Mp3));
+                    new MediaConverterMetadata(Converter.Bitrates.Kbps192, "file " + i, SupportedConversionFormats.Mp3));
             }
 
             bool done = false;
