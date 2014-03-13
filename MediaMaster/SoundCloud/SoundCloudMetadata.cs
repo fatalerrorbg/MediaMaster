@@ -24,7 +24,7 @@ namespace MediaMaster
 
         protected override void InitializeFields()
         {
-            this.FileExtension = SupportedConversionFormats.Mp3.Value;
+            this.FileExtension = SupportedConversionFormat.Mp3.Value;
         }
     }
 }

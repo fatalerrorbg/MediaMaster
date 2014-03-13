@@ -35,9 +35,17 @@ namespace MediaMaster.ConsoleApp
             Directory.CreateDirectory(desktop);
             for (int i = 0; i < vboxFiles.Length; i++)
             {
-                manager.EnqueueDownloadAndConvertRequest(vboxFiles[i], 
-                    desktop, 
-                    new MediaConverterMetadata(Converter.Bitrates.Kbps192, vboxFiles[i].Metadata.FileName, SupportedConversionFormats.Mp3));
+                MediaConverterMetadata metadata = null;
+                if (vboxFiles[i].FileOrigin == FileOrigin.SoundCloud)
+                {
+                    metadata = MediaConverterMetadata.Default;
+                }
+                else
+                {
+                    metadata = new MediaConverterMetadata(Converter.Bitrates.Kbps192, vboxFiles[i].Metadata.FileName, SupportedConversionFormat.Mp3);
+                }
+
+                manager.EnqueueDownloadAndConvertRequest(vboxFiles[i], desktop, metadata);
             }
 
             manager.StartDownload();

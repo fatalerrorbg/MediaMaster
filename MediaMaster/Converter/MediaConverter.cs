@@ -16,6 +16,12 @@ namespace MediaMaster
         public virtual ConvertResult Convert(MediaFile inputFile, string inputFilePath, string outputFolder, MediaConverterMetadata metadata)
         {
             ConvertResult result = new ConvertResult(inputFile);
+            if (metadata == MediaConverterMetadata.Default)
+            {
+                result.IsConverted = false;
+                return result;
+            }
+
             result.IsConverted = true;
             string destinationPath = Path.Combine(outputFolder, metadata.FileName + metadata.Extension);
             result.ConvertedPath = destinationPath;
@@ -41,8 +47,8 @@ namespace MediaMaster
             }
 
             string parameters = null;
-            SupportedConversionFormats format = SupportedConversionFormats.Parse(extension);
-            if (format == SupportedConversionFormats.Mp3)
+            SupportedConversionFormat format = SupportedConversionFormat.Parse(extension);
+            if (format == SupportedConversionFormat.Mp3)
             {
                 parameters = string.Format("-i \"{0}\" -ab {1}k \"{2}\"", inputFilePath, (int)metadata.AudioBitrate, destinationPath);
             }
