@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MediaMaster.Resolver;
 
 namespace MediaMaster.ConsoleApp
 {
@@ -19,7 +20,17 @@ namespace MediaMaster.ConsoleApp
                 files.Add(line);
             }
 
-            MediaFile[] vboxFiles = files.Select(x => MediaFile.CreateNew(x)).Where(x => x != null).ToArray();
+            VboxResolver resolver = new VboxResolver();
+            MediaFile[] vboxFiles = files.Select(x => 
+                {
+                    Uri uri;
+                    if (!Uri.TryCreate(x, UriKind.Absolute, out uri))
+	                {
+		                x = resolver.ResolveByName(x).First();
+	                }
+
+                    return MediaFile.CreateNew(x);
+                }).Where(x => x != null).ToArray();
 
             MediaDownloadConvertManager manager = new MediaDownloadConvertManager();
             manager.MaxParallelRequests = 2;

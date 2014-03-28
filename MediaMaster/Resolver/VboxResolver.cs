@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using MediaMaster.Utils;
@@ -10,22 +11,43 @@ namespace MediaMaster.Resolver
 {
     public class VboxResolver : MediaResolver
     {
-        public override string ResolveByName(string name)
+        public override IEnumerable<string> ResolveByName(string name)
         {
             string response = MediaHelper.SendGoogleSearchRequest(string.Format("{0} {1}", name, Constants.Vbox7));
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(response);
 
-            var splitted = doc.DocumentNode
+            var cites = doc.DocumentNode
                 .Descendants("cite")
-                .First()
-                .InnerHtml
-                .Split(new string[] { "</b", "<", "<b", ">", "b>", "\"" }, StringSplitOptions.RemoveEmptyEntries);
+                .Where(x =>
+                {
+                    string cleanText = this.GetCleanCiteText(x.InnerHtml);
+                    if (string.IsNullOrEmpty(cleanText))
+                    {
+                        return false;
+                    }
 
-            return string.Join(string.Empty, splitted);
+                    string expression = "vbox7.com/play:[A-Za-z0-9]{10}";
+                    return Regex.Match(cleanText, expression).Success;
+                })
+                .Select(x => this.GetCleanCiteText(x.InnerHtml));
+            
+            return cites;
         }
 
-        public override string ResolveByUrl(string url)
+        private string GetCleanCiteText(string rawString)
+        {
+            if (string.IsNullOrEmpty(rawString))
+            {
+                return string.Empty;
+            }
+
+            return string.Join(string.Empty,
+                rawString.Split(new string[] { "</b", "<", "<b", ">", "b>", "\"" },
+                StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        public override IEnumerable<string> ResolveByUrl(string url)
         {
             string response = MediaHelper.SendGoogleSearchRequest(url);
             HtmlDocument doc = new HtmlDocument();
@@ -37,7 +59,7 @@ namespace MediaMaster.Resolver
                 Descendants().
                 First().InnerText.Replace(" / VBOX7", "");
 
-            return name;
+            return new List<string>() { name };
         }
     }
 }

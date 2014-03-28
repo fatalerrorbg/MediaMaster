@@ -86,6 +86,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Calculators\" />
     <Folder Include="Plugins\" />
   </ItemGroup>
   <ItemGroup>

@@ -35,16 +35,11 @@ namespace MediaMaster
 
         public override MediaFileMetadata InitializeMetadata()
         {
-            string infoResponse = string.Empty;
             string videoId = this.ParseVideoId();
+            string infoResponse = MediaHelper.SendWebRequest(string.Format(InfoUrl, videoId));
             string fileName = string.Empty;
 
-            fileName = new VboxResolver().ResolveByUrl(this.Url);
-
-            using (WebClient wc = new WebClient())
-            {
-                infoResponse = wc.DownloadString(string.Format(InfoUrl, videoId));
-            }
+            fileName = new VboxResolver().ResolveByUrl(this.Url).First();
 
             string[] keyValuePairsRaw = infoResponse.Split(new string[] { "&" }, StringSplitOptions.RemoveEmptyEntries);
 

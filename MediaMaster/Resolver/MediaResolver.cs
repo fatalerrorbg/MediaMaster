@@ -8,8 +8,8 @@ namespace MediaMaster.Resolver
 {
     public abstract class MediaResolver
     {
-        public abstract string ResolveByName(string name);
+        public abstract IEnumerable<string> ResolveByName(string name);
 
-        public abstract string ResolveByUrl(string url);
+        public abstract IEnumerable<string> ResolveByUrl(string url);
     }
 }
