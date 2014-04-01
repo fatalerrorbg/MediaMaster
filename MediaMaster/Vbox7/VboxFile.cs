@@ -39,7 +39,7 @@ namespace MediaMaster
             string infoResponse = MediaHelper.SendWebRequest(string.Format(InfoUrl, videoId));
             string fileName = string.Empty;
 
-            fileName = new VboxResolver().ResolveByUrl(this.Url).First();
+            fileName = new VboxResolver().ResolveByUrl(this.Url);
 
             string[] keyValuePairsRaw = infoResponse.Split(new string[] { "&" }, StringSplitOptions.RemoveEmptyEntries);
 

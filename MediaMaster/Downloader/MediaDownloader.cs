@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net;
-using Ionic.Zip;
 using System.Diagnostics;
 using MediaMaster.Converter;
 using System.Collections.ObjectModel;

@@ -27,7 +27,7 @@ namespace MediaMaster.Resolver
                         return false;
                     }
 
-                    string expression = "vbox7.com/play:[A-Za-z0-9]{10}";
+                    string expression = "vbox7.com/play:[A-Za-z0-9]";
                     return Regex.Match(cleanText, expression).Success;
                 })
                 .Select(x => this.GetCleanCiteText(x.InnerHtml));
@@ -47,7 +47,7 @@ namespace MediaMaster.Resolver
                 StringSplitOptions.RemoveEmptyEntries));
         }
 
-        public override IEnumerable<string> ResolveByUrl(string url)
+        public override string ResolveByUrl(string url)
         {
             string response = MediaHelper.SendGoogleSearchRequest(url);
             HtmlDocument doc = new HtmlDocument();
@@ -59,7 +59,7 @@ namespace MediaMaster.Resolver
                 Descendants().
                 First().InnerText.Replace(" / VBOX7", "");
 
-            return new List<string>() { name };
+            return name;
         }
     }
 }
