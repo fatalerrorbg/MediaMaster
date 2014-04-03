@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace MediaMaster.Tests
 {
@@ -28,7 +29,8 @@ namespace MediaMaster.Tests
 
             string downloadLink = downloader.Metadata.DownloadLink;
 
-            Assert.AreEqual("http://media06.vbox7.com/s/a4/a40c203d8br20619d829.mp4", downloadLink);
+            bool isMatch = Regex.IsMatch(downloadLink, "http://media[0-9]{2}.vbox7.com/s/a4/a40c203d8br20619d829.mp4");
+            Assert.IsTrue(isMatch);
         }
 
         [TestMethod]
