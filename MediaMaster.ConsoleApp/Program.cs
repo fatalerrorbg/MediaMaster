@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediaMaster.Resolver;
+using System.Text.RegularExpressions;
 
 namespace MediaMaster.ConsoleApp
 {
@@ -13,6 +14,13 @@ namespace MediaMaster.ConsoleApp
         static void Main(string[] args)
         {
             List<string> files = new List<string>();
+
+            //string[] dirFiles = Directory.GetFiles(@"E:\New folder");
+
+            //foreach (var file in dirFiles)
+            //{
+            //    files.Add(Path.GetFileNameWithoutExtension(file).Replace(".mp3", ""));
+            //}
 
             string line = null;
             while ((line = Console.ReadLine()) != "")
@@ -26,14 +34,26 @@ namespace MediaMaster.ConsoleApp
                     Uri uri;
                     if (!Uri.TryCreate(x, UriKind.Absolute, out uri))
 	                {
-		                x = resolver.ResolveByName(x).First();
+                        string preceedingNumberExpression = "[0-9]{3}.";
+                        //string fullNameExpression = string.Format("{0}[a-z0-9].mp3", preceedingNumberExpression);
+
+                        x = Regex.Replace(x, preceedingNumberExpression, "").Trim();
+                        var urls = resolver.ResolveByName(x);
+                        if (urls.Any())
+                        {
+                            x = urls.First();
+                        }
+                        else
+                        {
+                            return null;
+                        }
 	                }
 
                     return MediaFile.CreateNew(x);
                 }).Where(x => x != null).ToArray();
 
             MediaDownloadConvertManager manager = new MediaDownloadConvertManager();
-            manager.MaxParallelRequests = 2;
+            manager.MaxParallelRequests = 10;
 
             manager.Downloader.MediaFileDownloadStarting += downloader_MediaFileDownloadStarting;
             manager.Downloader.MediaFileDownloadProgress += downloader_MediaFileDownloadProgress;

@@ -53,6 +53,12 @@ namespace MediaMaster
                 }
             }
 
+            //TODO add constant
+            if (fileInfo.ContainsKey("errorInfo"))
+            {
+                return MediaFileMetadata.DefaultMetadata;   
+            }
+
             return new VboxFileMetadata(this.Url, fileInfo[VboxFile.ThumbnailKey], fileInfo[VboxFile.DownloadUrlKey], videoId, fileName);
         }
 

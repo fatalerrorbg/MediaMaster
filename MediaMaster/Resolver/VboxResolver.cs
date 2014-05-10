@@ -11,6 +11,7 @@ namespace MediaMaster.Resolver
 {
     public class VboxResolver : MediaResolver
     {
+        //add \b
         protected const string Expression = "vbox7.com/play:[A-Za-z0-9]";
 
         public override IEnumerable<string> ResolveByName(string name)

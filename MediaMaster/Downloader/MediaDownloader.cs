@@ -52,12 +52,13 @@ namespace MediaMaster
             MediaFileMetadata metadata = file.Metadata;
             string outputPath = Path.Combine(tempFolderPath, metadata.FileName + metadata.FileExtension);
 
-            if (!this.OnMediaFileDownloadStarting(file, outputPath))
+            if (!this.OnMediaFileDownloadStarting(file, outputPath) || metadata == MediaFileMetadata.DefaultMetadata)
             {
                 result.IsDownloaded = false;
                 return result;
             }
 
+            file.InitializeMetadata();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(metadata.DownloadLink);
             request.Method = WebRequestMethods.File.DownloadFile;
             request.UserAgent = MediaDownloader.GetRandomUserAgent();
